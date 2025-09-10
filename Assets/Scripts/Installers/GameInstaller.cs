@@ -2,7 +2,8 @@ using UnityEngine;
 using Zenject;
 using TowerDefense.Managers;
 using TowerDefense.Core;
-using TowerDefense.Signals; // Import the signals namespace
+using TowerDefense.Signals;
+using UnityEngine.Serialization; // Import the signals namespace
 
 namespace TowerDefense.Installers
 {
@@ -12,9 +13,9 @@ namespace TowerDefense.Installers
     /// </summary>
     public class GameInstaller : MonoInstaller
     {
-        [SerializeField] private EconomyManager economyManagerPrefab;
-        [SerializeField] private EnemyManager enemyManagerPrefab;
-        [SerializeField] private TowerFactory towerFactoryPrefab;
+        [SerializeField] private EconomyManager _economyManagerPrefab;
+        [SerializeField] private EnemyManager _enemyManagerPrefab;
+        [SerializeField] private TowerFactory _towerFactoryPrefab;
 
         public override void InstallBindings()
         {
@@ -27,9 +28,9 @@ namespace TowerDefense.Installers
             Container.DeclareSignal<EnemyDiedSignal>();
             
             // The rest of the bindings remain the same.
-            Container.Bind<EconomyManager>().FromComponentInNewPrefab(economyManagerPrefab).AsSingle().NonLazy();
-            Container.Bind<EnemyManager>().FromComponentInNewPrefab(enemyManagerPrefab).AsSingle().NonLazy();
-            Container.Bind<TowerFactory>().FromComponentInNewPrefab(towerFactoryPrefab).AsSingle().NonLazy();
+            Container.Bind<EconomyManager>().FromComponentInNewPrefab(_economyManagerPrefab).AsSingle().NonLazy();
+            Container.Bind<EnemyManager>().FromComponentInNewPrefab(_enemyManagerPrefab).AsSingle().NonLazy();
+            Container.Bind<TowerFactory>().FromComponentInNewPrefab(_towerFactoryPrefab).AsSingle().NonLazy();
         }
     }
 }
