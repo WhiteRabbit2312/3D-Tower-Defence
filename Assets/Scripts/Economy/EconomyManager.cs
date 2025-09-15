@@ -50,12 +50,13 @@ namespace TowerDefense.Managers
             OnCurrencyChanged?.Invoke(CurrentCurrency);
         }
 
-        public bool SpendCurrency(int amount)
+        public bool TrySpendCurrency(int amount)
         {
             if (CurrentCurrency >= amount)
             {
                 CurrentCurrency -= amount;
-                OnCurrencyChanged?.Invoke(CurrentCurrency);
+                Debug.Log($"Spent {amount}. Current currency: {CurrentCurrency}");
+                // Fire a signal here to update the UI
                 return true;
             }
             return false;

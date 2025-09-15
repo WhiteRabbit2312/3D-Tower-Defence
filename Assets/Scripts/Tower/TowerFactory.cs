@@ -1,48 +1,52 @@
-using UnityEngine;
+using TowerDefense.Data;
+using TowerDefense.Interfaces;
 using TowerDefense.Towers;
-using UnityEngine.Serialization; // Assuming your tower prefabs are in this namespace
+using UnityEngine;
+using Zenject;
 
-namespace TowerDefense.Core
+namespace TowerDefense.Factories
 {
     /// <summary>
-    /// Factory pattern implementation for creating towers.
-    /// This decouples the game logic from the concrete tower prefabs.
-    /// You would typically load prefabs from Resources or an Addressables system here.
+    /// A Plain Old C# Object (POCO) factory for creating towers.
+    /// It uses Zenject's DiContainer to properly instantiate tower prefabs
+    /// and resolve all their dependencies.
     /// </summary>
-    public class TowerFactory : MonoBehaviour
+    public class TowerFactory : ITowerFactory
     {
-        [SerializeField] private BaseTower _machineGunTowerPrefab;
-        [SerializeField] private BaseTower _slowingTowerPrefab;
-        
-        public enum TowerType
+        private readonly DiContainer _container;
+
+        // The container is injected by Zenject when the factory itself is created.
+        public TowerFactory(DiContainer container)
         {
-            MachineGun,
-            Slowing
+            _container = container;
         }
 
-        public BaseTower CreateTower(TowerType type, Vector3 position)
+        /// <summary>
+        /// Creates a new tower instance from the provided data at the given position.
+        /// </summary>
+        /// <param name="towerData">The ScriptableObject defining the tower to create.</param>
+        /// <param name="position">The world position to spawn the tower at.</param>
+        /// <returns>The created BaseTower component, or null if creation failed.</returns>
+        public BaseTower CreateTower(TowerData towerData, Vector3 position)
         {
-            BaseTower prefab = GetPrefab(type);
-            if (prefab == null)
+            if (towerData == null || towerData.TowerPrefab == null)
             {
-                Debug.LogError($"Prefab for tower type {type} not found!");
+                Debug.LogError("[TowerFactory] TowerData or its prefab is null. Cannot create tower.");
                 return null;
             }
-            
-            return Instantiate(prefab, position, Quaternion.identity);
-        }
 
-        private BaseTower GetPrefab(TowerType type)
-        {
-            switch (type)
-            {
-                case TowerType.MachineGun:
-                    return _machineGunTowerPrefab;
-                case TowerType.Slowing:
-                    return _slowingTowerPrefab;
-                default:
-                    return null;
-            }
+            // Use InstantiatePrefabForComponent to create the tower.
+            // Zenject will handle dependency injection on the tower's scripts automatically.
+            BaseTower towerInstance = _container.InstantiatePrefabForComponent<BaseTower>(
+                towerData.TowerPrefab,
+                position,
+                Quaternion.identity,
+                null); // Parent can be set here if needed
+
+            // Here you would typically initialize the tower with stats from TowerData
+            // e.g., towerInstance.Setup(towerData);
+                
+            return towerInstance;
         }
     }
 }
