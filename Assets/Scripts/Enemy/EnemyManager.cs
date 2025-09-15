@@ -13,10 +13,10 @@ namespace TowerDefense.Managers
     /// </summary>
     public class EnemyManager : MonoBehaviour
     {
-        private SignalBus _signalBus;
+        public List<ITargetable> ActiveEnemies { get; private set; } = new List<ITargetable>();
         
-        public IReadOnlyList<ITargetable> ActiveEnemies => _activeEnemies;
-        private readonly List<ITargetable> _activeEnemies = new List<ITargetable>();
+        private SignalBus _signalBus;
+        private int _enemiesRemainingInWave;
 
         [Inject]
         public void Construct(SignalBus signalBus)
@@ -26,31 +26,57 @@ namespace TowerDefense.Managers
 
         private void OnEnable()
         {
-            _signalBus.Subscribe<EnemySpawnedSignal>(OnEnemySpawned);
-            _signalBus.Subscribe<EnemyDiedSignal>(OnEnemyDied);
+            _signalBus.Subscribe<EnemySpawnedSignal>(HandleEnemySpawn);
+            _signalBus.Subscribe<EnemyDiedSignal>(HandleEnemyDeath);
+            _signalBus.Subscribe<EnemyReachedEndSignal>(HandleEnemyReachedEnd); // Handle enemies that reach the end
         }
 
         private void OnDisable()
         {
-            _signalBus.Unsubscribe<EnemySpawnedSignal>(OnEnemySpawned);
-            _signalBus.Unsubscribe<EnemyDiedSignal>(OnEnemyDied);
+            _signalBus.Unsubscribe<EnemySpawnedSignal>(HandleEnemySpawn);
+            _signalBus.Unsubscribe<EnemyDiedSignal>(HandleEnemyDeath);
+            _signalBus.Unsubscribe<EnemyReachedEndSignal>(HandleEnemyReachedEnd);
         }
 
-        private void OnEnemySpawned(EnemySpawnedSignal signal)
+        public void PrepareForWave(int enemyCount)
         {
-            var enemy = signal.Enemy;
-            if (!_activeEnemies.Contains(enemy))
+            _enemiesRemainingInWave = enemyCount;
+        }
+
+        private void HandleEnemySpawn(EnemySpawnedSignal signal)
+        {
+            if (signal.Enemy != null && !ActiveEnemies.Contains(signal.Enemy))
             {
-                _activeEnemies.Add(enemy);
+                ActiveEnemies.Add(signal.Enemy);
             }
         }
-        
-        private void OnEnemyDied(EnemyDiedSignal signal)
+
+        private void HandleEnemyDeath(EnemyDiedSignal signal)
         {
-            var enemy = signal.Enemy;
-            if (_activeEnemies.Contains(enemy))
+            RemoveActiveEnemy(signal.Enemy);
+        }
+
+        private void HandleEnemyReachedEnd(EnemyReachedEndSignal signal)
+        {
+            // An enemy that reaches the end should also be removed from the active list
+            RemoveActiveEnemy(signal.Enemy);
+        }
+        
+        private void RemoveActiveEnemy(ITargetable enemy)
+        {
+            if (enemy != null && ActiveEnemies.Contains(enemy))
             {
-                _activeEnemies.Remove(enemy);
+                ActiveEnemies.Remove(enemy);
+            }
+            
+            _enemiesRemainingInWave--;
+            
+            // Check if this was the last enemy of the wave
+            if (_enemiesRemainingInWave <= 0)
+            {
+                // Fire a signal so other systems (like WaveManager) know the wave is cleared.
+                _signalBus.Fire(new WaveClearedSignal());
+                Debug.Log("Wave Cleared!");
             }
         }
     }
