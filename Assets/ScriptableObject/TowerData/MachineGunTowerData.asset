@@ -15,7 +15,7 @@ MonoBehaviour:
   TowerPrefab: {fileID: 3493675867410704094, guid: 9a5ff9bed88853648bf6c02598d674c8, type: 3}
   BuildCost: 0
   UpgradeLevels:
-  - Cost: 0
-    Damage: 0
-    Range: 0
-    FireRate: 0
+  - Cost: 10
+    Damage: 10
+    Range: 20
+    FireRate: 10

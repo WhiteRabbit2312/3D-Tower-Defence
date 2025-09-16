@@ -4,6 +4,8 @@ using TowerDefense.Managers;
 using TowerDefense.Factories;
 using TowerDefense.Interfaces;
 using TowerDefense.Signals;
+using TowerDefense.Towers;
+using TowerDefense.Towers.Projectiles;
 using TowerDefense.UIMarket;
 
 namespace TowerDefense.Installers
@@ -46,6 +48,7 @@ namespace TowerDefense.Installers
             // Bind factories to their interfaces
             Container.Bind<IEnemyFactory>().To<EnemyFactory>().AsSingle();
             Container.Bind<ITowerFactory>().To<TowerFactory>().AsSingle();
+            Container.Bind<IProjectileFactory>().To<ProjectileFactory>().AsSingle();
 
             // Bind scene references so they can be injected using WithId
             // We remove .AsSingle() because Zenject 6+ doesn't allow multiple .AsSingle bindings for the same type.

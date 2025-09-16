@@ -250,8 +250,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33ebef7724fb5ae48840368dbafd4063, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TowerData: {fileID: 11400000, guid: 002f92be34be1254ab8cb72b4b010cd8, type: 2}
   TurretHead: {fileID: 636643747887296851}
+  MuzzlePoint: {fileID: 8387551233907290558}
+  ProjectileSpeed: 50
+  _projectilePrefab: {fileID: 8448576071625396945, guid: 4e5446c652eb3d54998f64e563990635, type: 3}
 --- !u!1 &8255275450135198299
 GameObject:
   m_ObjectHideFlags: 0

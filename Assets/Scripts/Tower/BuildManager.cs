@@ -121,8 +121,8 @@ namespace TowerDefense.Managers
                 if (_economyManager.TrySpendCurrency(_selectedTowerData.BuildCost))
                 {
                     BaseTower newTower = _towerFactory.CreateTower(_selectedTowerData, platform.transform.position);
+                    newTower.Initialize(_selectedTowerData);
                     platform.SetPlacedTower(newTower);
-                    
                     // After placing, deselect the tower to prevent building multiple with one purchase
                     CancelBuildMode(); 
                 }

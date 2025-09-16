@@ -24,8 +24,6 @@ namespace TowerDefense.Towers.Projectiles
                 effectableTarget.ApplySpeedModifier(_slowMultiplier, _slowDuration);
             }
 
-            // Here you can spawn a visual effect for the slow.
-            
             Destroy(gameObject);
         }
     }

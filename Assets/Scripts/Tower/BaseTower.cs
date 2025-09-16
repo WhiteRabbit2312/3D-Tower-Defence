@@ -17,17 +17,26 @@ namespace TowerDefense.Towers
     /// </summary>
     public abstract class BaseTower : MonoBehaviour
     {
-        [Header("Configuration")]
-        [SerializeField] protected TowerData TowerData;
+        [Header("Core References")]
+        [Tooltip("The part of the tower that rotates to face the target.")]
         [SerializeField] protected Transform TurretHead;
+        [Tooltip("The point from which projectiles are fired.")]
+        [SerializeField] protected Transform MuzzlePoint;
+        [Header("Projectile Settings")]
+        [Tooltip("The speed at which projectiles from this tower travel.")]
+        [SerializeField] protected float ProjectileSpeed = 50f;
 
+        // Public property to hold tower-specific data, assigned by BuildManager
+        public TowerData TowerData { get; private set; }
+
+        // Protected fields for subclasses, capitalized as per convention
         protected ITargetable CurrentTarget;
         protected EnemyManager EnemyManager;
         protected EconomyManager EconomyManager;
-
         protected int CurrentLevel = 0;
         protected float FireCooldown = 0f;
         
+        // Current stats, derived from TowerData and current level
         protected float CurrentDamage;
         protected float CurrentRange;
         protected float CurrentFireRate;
@@ -43,9 +52,13 @@ namespace TowerDefense.Towers
             EconomyManager = economyManager;
         }
 
-        protected virtual void Start()
+        /// <summary>
+        /// Called by the BuildManager right after the tower is placed.
+        /// </summary>
+        public void Initialize(TowerData data)
         {
-            ApplyUpgrade(0);
+            TowerData = data;
+            ApplyUpgrade(0); // Set initial stats for level 0
         }
 
         protected virtual void Update()
@@ -67,7 +80,7 @@ namespace TowerDefense.Towers
                 }
             }
         }
-
+        
         protected void FindTarget()
         {
             var potentialTargets = EnemyManager.ActiveEnemies
@@ -135,7 +148,6 @@ namespace TowerDefense.Towers
         protected void ApplyUpgrade(int level)
         {
             CurrentLevel = level;
-            // The tower doesn't care about the type of TowerData, it just gets the stats.
             CurrentDamage = TowerData.GetDamage(level);
             CurrentRange = TowerData.GetRange(level);
             CurrentFireRate = TowerData.GetFireRate(level);
@@ -143,12 +155,16 @@ namespace TowerDefense.Towers
             CurrentSlowDuration = TowerData.GetSlowDuration(level);
         }
         
+        /// <summary>
+        /// Abstract method for firing. Each subclass MUST implement this
+        /// to define its specific firing behavior (e.g., create a projectile).
+        /// </summary>
         protected abstract void Fire();
         
         protected virtual void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.cyan;
-            Gizmos.DrawWireSphere(transform.position, TowerData != null ? TowerData.GetRange(CurrentLevel) : 10f);
+            Gizmos.DrawWireSphere(transform.position, CurrentRange);
         }
     }
 }
