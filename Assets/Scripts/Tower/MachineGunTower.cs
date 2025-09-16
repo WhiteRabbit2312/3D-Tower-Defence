@@ -1,4 +1,5 @@
 using TowerDefense.Enemies;
+using TowerDefense.Towers.Projectiles;
 
 namespace TowerDefense.Towers
 {
@@ -6,13 +7,11 @@ namespace TowerDefense.Towers
     {
         protected override void Fire()
         {
-            // The logic to find and validate the target is already in the base class.
-            // We just need to apply the damage.
-            if (CurrentTarget is BaseEnemy enemy)
-            {
-                enemy.TakeDamage(CurrentDamage);
-                // Here you would also spawn a projectile or a muzzle flash effect.
-            }
+            DamageProjectile newProjectile = _projectileFactory.Create(_projectilePrefab, MuzzlePoint.position, MuzzlePoint.rotation);
+    
+            // Ініціалізація створеного снаряда
+            newProjectile.Initialize(CurrentTarget, _projectileSpeed, CurrentDamage);
+
         }
     }
 }
