@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace TowerDefense.UI
+namespace TowerDefense.UIMarket
 {
     public abstract class UIWindowBase : MonoBehaviour
     {
@@ -10,7 +10,13 @@ namespace TowerDefense.UI
         [SerializeField] protected Button OpenButton;
         [SerializeField] protected Button CloseButton;
 
-        [Inject] protected UIManager UiManager;
+        protected UIManager UiManager;
+
+        [Inject]
+        public void Construct(UIManager uiManager)
+        {
+            UiManager = uiManager;
+        }
 
         protected virtual void Awake()
         {

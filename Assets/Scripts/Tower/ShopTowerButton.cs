@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace TowerDefense.UI
+namespace TowerDefense.UIMarket
 {
     /// <summary>
     /// This script should be placed on a UI Button in your shop.

@@ -9,14 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dff1ddcc764f1944c804d00fd26baf62, type: 3}
-  m_Name: SlowingTowerData
+  m_Script: {fileID: 11500000, guid: 4f8fa00aa5e8adb4391184553a99e8b9, type: 3}
+  m_Name: MachineGunTowerData
   m_EditorClassIdentifier: 
-  TowerPrefab: {fileID: 5735905219706733880, guid: 81b0f69fc5b2d47499a1bd5e463786ae, type: 3}
+  TowerPrefab: {fileID: 3493675867410704094, guid: 9a5ff9bed88853648bf6c02598d674c8, type: 3}
   BuildCost: 0
   UpgradeLevels:
   - Cost: 0
+    Damage: 0
     Range: 0
     FireRate: 0
-    SlowMultiplier: 0
-    SlowDuration: 0

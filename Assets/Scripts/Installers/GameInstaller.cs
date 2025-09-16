@@ -4,7 +4,7 @@ using TowerDefense.Managers;
 using TowerDefense.Factories;
 using TowerDefense.Interfaces;
 using TowerDefense.Signals;
-using UnityEngine.Serialization; // Import the signals namespace
+using TowerDefense.UIMarket;
 
 namespace TowerDefense.Installers
 {
@@ -17,6 +17,7 @@ namespace TowerDefense.Installers
         [Header("Manager Prefabs")]
         [SerializeField] private EconomyManager _economyManagerPrefab;
         [SerializeField] private EnemyManager _enemyManagerPrefab;
+        [SerializeField] private BuildManager _buildManagerPrefab;
         
         [Header("Scene References")]
         [Tooltip("The Transform where enemies will be spawned.")]
@@ -38,10 +39,13 @@ namespace TowerDefense.Installers
             // Bind managers from prefabs
             Container.Bind<EconomyManager>().FromComponentInNewPrefab(_economyManagerPrefab).AsSingle().NonLazy();
             Container.Bind<EnemyManager>().FromComponentInNewPrefab(_enemyManagerPrefab).AsSingle().NonLazy();
+            Container.Bind<BuildManager>().FromComponentInNewPrefab(_buildManagerPrefab).AsSingle().NonLazy();
+
+            Container.Bind<UIManager>().AsSingle();
             
             // Bind factories to their interfaces
             Container.Bind<IEnemyFactory>().To<EnemyFactory>().AsSingle();
-            //Container.Bind<ITowerFactory>().To<TowerFactory>().AsSingle();
+            Container.Bind<ITowerFactory>().To<TowerFactory>().AsSingle();
 
             // Bind scene references so they can be injected using WithId
             // We remove .AsSingle() because Zenject 6+ doesn't allow multiple .AsSingle bindings for the same type.

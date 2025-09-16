@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace TowerDefense.UI
+namespace TowerDefense.UIMarket
 {
     public abstract class UIScreen : UIWindowBase
     {
@@ -9,6 +9,11 @@ namespace TowerDefense.UI
             base.Awake();
             if (OpenButton != null)
             {
+                if (UiManager == null)
+                {
+                    Debug.LogError("UiManager is null");
+                }
+                
                 OpenButton.onClick.AddListener(() => UiManager.OpenScreen(this));
             }
 

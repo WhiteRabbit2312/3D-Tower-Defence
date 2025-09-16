@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace TowerDefense.UI
+namespace TowerDefense.UIMarket
 {
     public class UIManager
     {
