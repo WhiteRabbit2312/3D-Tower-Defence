@@ -55,6 +55,7 @@ namespace TowerDefense.Managers
             if (CurrentCurrency >= amount)
             {
                 CurrentCurrency -= amount;
+                OnCurrencyChanged?.Invoke(CurrentCurrency);
                 Debug.Log($"Spent {amount}. Current currency: {CurrentCurrency}");
                 // Fire a signal here to update the UI
                 return true;

@@ -1,4 +1,5 @@
 using TowerDefense.Interfaces;
+using UnityEngine;
 
 namespace TowerDefense.Towers.Projectiles
 {
@@ -17,13 +18,12 @@ namespace TowerDefense.Towers.Projectiles
 
         protected override void OnHitTarget()
         {
+            Debug.LogError("OnHitTarget");
             if (Target is IEffectable effectableTarget)
             {
+                Debug.LogError("OnHitTarget1");
                 effectableTarget.TakeDamage(_damage);
             }
-            
-            // Here you can spawn an impact effect.
-            
             Destroy(gameObject);
         }
     }

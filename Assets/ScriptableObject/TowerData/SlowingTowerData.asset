@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: SlowingTowerData
   m_EditorClassIdentifier: 
   TowerPrefab: {fileID: 5735905219706733880, guid: 81b0f69fc5b2d47499a1bd5e463786ae, type: 3}
-  BuildCost: 0
+  BuildCost: 20
   UpgradeLevels:
   - Cost: 10
     Range: 10
-    FireRate: 3
+    FireRate: 1
     SlowMultiplier: 0.738
     SlowDuration: 5

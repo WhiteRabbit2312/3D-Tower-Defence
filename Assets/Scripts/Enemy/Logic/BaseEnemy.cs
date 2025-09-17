@@ -72,6 +72,7 @@ namespace TowerDefense.Enemies
             if (!IsAlive) return;
 
             _currentHealth -= amount;
+            Debug.LogError(_currentHealth);
             if (_currentHealth <= 0)
             {
                 Die();
@@ -101,7 +102,9 @@ namespace TowerDefense.Enemies
         
         protected virtual void Die()
         {
+            Debug.LogError("1");
             if (!IsAlive) return; // Prevent multiple death signals
+            Debug.LogError("2");
             _currentHealth = 0; // Ensure IsAlive is false
             _signalBus.Fire(new EnemyDiedSignal(this));
             Destroy(gameObject);

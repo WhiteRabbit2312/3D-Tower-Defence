@@ -149,11 +149,8 @@ namespace TowerDefense.Managers
             Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
-                Debug.LogError("3: " + hit.collider.name);
-
                 return hit.collider.GetComponent<TowerPlatform>();
             }
-            Debug.LogError("4: " + hit.collider.GetComponent<TowerPlatform>());
             return null;
         }
     }
