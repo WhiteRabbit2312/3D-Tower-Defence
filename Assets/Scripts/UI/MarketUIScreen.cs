@@ -30,6 +30,7 @@ namespace TowerDefense.UIMarket
         /// </summary>
         private void OnTowerPlaced()
         {
+            Debug.LogError("OnTowerPlaced");
             // Close the market screen when a tower is successfully built
             // We use the Close() method inherited from UIWindowBase
             Close();

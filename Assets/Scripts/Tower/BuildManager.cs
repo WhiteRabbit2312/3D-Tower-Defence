@@ -1,6 +1,7 @@
 using TowerDefense.Data;
 using TowerDefense.Factories;
 using TowerDefense.Interfaces;
+using TowerDefense.Signals;
 using TowerDefense.Towers;
 using TowerDefense.UIMarket;
 using UnityEngine;
@@ -13,13 +14,14 @@ namespace TowerDefense.Managers
     /// </summary>
     public class BuildManager : MonoBehaviour
     {
-       private TowerData _selectedTowerData;
+        private TowerData _selectedTowerData;
         private BaseTower _towerGhost;
 
         // --- Dependencies ---
         private ITowerFactory _towerFactory;
         private EconomyManager _economyManager;
         private UpgradeSellPanel _upgradeSellPanel;
+        private SignalBus _signalBus;
         private Camera _mainCamera;
 
         // --- State Cooldown ---
@@ -28,25 +30,27 @@ namespace TowerDefense.Managers
 
         [Inject]
         public void Construct(
-            ITowerFactory towerFactory, 
-            EconomyManager economyManager, 
-            UpgradeSellPanel upgradeSellPanel)
+            ITowerFactory towerFactory,
+            EconomyManager economyManager,
+            UpgradeSellPanel upgradeSellPanel,
+            SignalBus signalBus)
         {
             _towerFactory = towerFactory;
             _economyManager = economyManager;
             _upgradeSellPanel = upgradeSellPanel;
+            _signalBus = signalBus;
         }
 
         private void Awake()
         {
             _mainCamera = Camera.main;
         }
-        
+
         public void SelectTowerToBuild(TowerData towerData)
         {
             if (_economyManager.CurrentCurrency < towerData.BuildCost) return;
-            
-            //_upgradeSellPanel.Hide();
+
+            //_upgradeSellPanel.Hide(); // As per your provided script
             _selectedTowerData = towerData;
             if (_towerGhost != null) Destroy(_towerGhost.gameObject);
             _towerGhost = Instantiate(_selectedTowerData.TowerPrefab);
@@ -64,7 +68,7 @@ namespace TowerDefense.Managers
             if (_selectedTowerData != null)
             {
                 MoveGhostToCursor();
-                
+
                 if (Input.GetMouseButtonDown(0))
                 {
                     TryPlaceTower();
@@ -83,7 +87,6 @@ namespace TowerDefense.Managers
 
         private void HandlePlatformClicks()
         {
-            // --- CRITICAL FIX ---
             // We check the cooldown here. If a build/cancel action just happened, we ignore this click.
             if (_platformClickCooldown > 0)
             {
@@ -108,9 +111,14 @@ namespace TowerDefense.Managers
                 if (_economyManager.TrySpendCurrency(_selectedTowerData.BuildCost))
                 {
                     BaseTower newTower = _towerFactory.CreateTower(_selectedTowerData, platform.transform.position);
-                    newTower.Initialize(_selectedTowerData, platform); 
+                    newTower.Initialize(_selectedTowerData, platform);
                     platform.SetPlacedTower(newTower);
-                    CancelBuildMode(); 
+                    
+                    // --- THIS IS WHERE THE SIGNAL IS FIRED ---
+                    // Announce that a tower has been successfully placed.
+                    _signalBus.Fire(new TowerPlacedSignal());
+
+                    CancelBuildMode();
                 }
                 else
                 {
@@ -118,16 +126,15 @@ namespace TowerDefense.Managers
                 }
             }
         }
-        
+
         private void CancelBuildMode()
         {
             if (_towerGhost != null) Destroy(_towerGhost.gameObject);
             _towerGhost = null;
             _selectedTowerData = null;
-            
-            //_upgradeSellPanel.Hide();
 
-            // --- CRITICAL FIX ---
+            //_upgradeSellPanel.Hide(); // As per your provided script
+
             // We start a short cooldown period. This is much more reliable than a single-frame flag.
             _platformClickCooldown = 0.1f;
         }
@@ -146,7 +153,7 @@ namespace TowerDefense.Managers
                 }
             }
         }
-        
+
         private TowerPlatform GetPlatformUnderCursor()
         {
             Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
@@ -154,6 +161,7 @@ namespace TowerDefense.Managers
             {
                 return hit.collider.GetComponent<TowerPlatform>();
             }
+
             return null;
         }
     }

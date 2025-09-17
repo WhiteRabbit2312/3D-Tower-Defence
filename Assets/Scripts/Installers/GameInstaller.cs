@@ -37,6 +37,7 @@ namespace TowerDefense.Installers
             Container.DeclareSignal<EnemyDiedSignal>();
             Container.DeclareSignal<EnemyReachedEndSignal>();
             Container.DeclareSignal<WaveClearedSignal>();
+            Container.DeclareSignal<TowerPlacedSignal>();
             
             // Bind managers from prefabs
             Container.Bind<EconomyManager>().FromComponentInNewPrefab(_economyManagerPrefab).AsSingle().NonLazy();
