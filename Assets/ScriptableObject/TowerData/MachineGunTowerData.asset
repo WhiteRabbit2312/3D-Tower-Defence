@@ -16,6 +16,6 @@ MonoBehaviour:
   BuildCost: 10
   UpgradeLevels:
   - Cost: 10
-    Damage: 100
+    Damage: 10
     Range: 20
-    FireRate: 10
+    FireRate: 0.3

@@ -17,6 +17,6 @@ MonoBehaviour:
   UpgradeLevels:
   - Cost: 10
     Range: 10
-    FireRate: 1
-    SlowMultiplier: 0.738
+    FireRate: 0.5
+    SlowMultiplier: 0.194
     SlowDuration: 5

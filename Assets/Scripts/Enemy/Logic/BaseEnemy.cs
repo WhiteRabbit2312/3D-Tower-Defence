@@ -26,6 +26,7 @@ namespace TowerDefense.Enemies
         private Transform _target;
         
         private Coroutine _speedModifierCoroutine;
+        private bool _isDying = false; // The new flag to prevent multiple deaths
 
         [Inject]
         public void Construct(SignalBus signalBus, [Inject(Id = "PathTarget")] Transform target)
@@ -41,7 +42,8 @@ namespace TowerDefense.Enemies
 
         protected virtual void Update()
         {
-            if (IsAlive && _agent.hasPath && !_agent.pathPending && _agent.remainingDistance <= _agent.stoppingDistance)
+            // Check if agent is valid before accessing properties to prevent errors on death
+            if (IsAlive && _agent.isOnNavMesh && _agent.hasPath && !_agent.pathPending && _agent.remainingDistance <= _agent.stoppingDistance)
             {
                 ReachEnd();
             }
@@ -69,21 +71,20 @@ namespace TowerDefense.Enemies
 
         public virtual void TakeDamage(float amount)
         {
-            if (!IsAlive) return;
+            // This check prevents taking damage after death has been initiated
+            if (_isDying || !IsAlive) return;
 
             _currentHealth -= amount;
-            Debug.LogError(_currentHealth);
             if (_currentHealth <= 0)
             {
                 Die();
             }
         }
-
-        /// <summary>
-        /// Applies a speed-altering effect for a specific duration.
-        /// </summary>
+        
         public void ApplySpeedModifier(float multiplier, float duration)
         {
+            if (!IsAlive) return; // Don't apply effects to dead enemies
+            
             if (_speedModifierCoroutine != null)
             {
                 StopCoroutine(_speedModifierCoroutine);
@@ -96,22 +97,34 @@ namespace TowerDefense.Enemies
             float originalSpeed = _enemyData.BaseMoveSpeed;
             _agent.speed = originalSpeed * multiplier;
             yield return new WaitForSeconds(duration);
-            _agent.speed = originalSpeed;
+            // Check if agent is still valid before resetting speed
+            if (_agent.isOnNavMesh) 
+            {
+                _agent.speed = originalSpeed;
+            }
             _speedModifierCoroutine = null;
         }
         
         protected virtual void Die()
         {
-            Debug.LogError("1");
-            if (!IsAlive) return; // Prevent multiple death signals
-            Debug.LogError("2");
-            _currentHealth = 0; // Ensure IsAlive is false
+            // Use the flag to ensure this logic runs only once
+            if (_isDying) return;
+            _isDying = true; // Set the flag immediately
+
+            // Disable the agent to stop movement and prevent errors
+            _agent.enabled = false;
+            
             _signalBus.Fire(new EnemyDiedSignal(this));
-            Destroy(gameObject);
+            
+            // It's slightly safer to destroy with a small delay to ensure all signals are processed
+            Destroy(gameObject, 0.1f); 
         }
 
         private void ReachEnd()
         {
+            if (_isDying) return; // Prevent reaching end if already dying
+            _isDying = true;
+
             _signalBus.Fire(new EnemyReachedEndSignal(this));
             Destroy(gameObject);
         }
