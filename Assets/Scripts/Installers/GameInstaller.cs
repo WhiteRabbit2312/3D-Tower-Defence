@@ -43,16 +43,18 @@ namespace TowerDefense.Installers
             Container.Bind<EnemyManager>().FromComponentInNewPrefab(_enemyManagerPrefab).AsSingle().NonLazy();
             Container.Bind<BuildManager>().FromComponentInNewPrefab(_buildManagerPrefab).AsSingle().NonLazy();
 
+            // Bind UI components
             Container.Bind<UIManager>().AsSingle();
+            
+            // Bind the UpgradeSellPanel from the scene hierarchy
+            Container.Bind<UpgradeSellPanel>().FromComponentInHierarchy().AsSingle();
             
             // Bind factories to their interfaces
             Container.Bind<IEnemyFactory>().To<EnemyFactory>().AsSingle();
             Container.Bind<ITowerFactory>().To<TowerFactory>().AsSingle();
             Container.Bind<IProjectileFactory>().To<ProjectileFactory>().AsSingle();
 
-            // Bind scene references so they can be injected using WithId
-            // We remove .AsSingle() because Zenject 6+ doesn't allow multiple .AsSingle bindings for the same type.
-            // .FromInstance() is sufficient here.
+            // Bind scene references with IDs
             Container.Bind<Transform>().WithId("SpawnPoint").FromInstance(_spawnPoint);
             Container.Bind<Transform>().WithId("PathTarget").FromInstance(_pathTarget);
         }

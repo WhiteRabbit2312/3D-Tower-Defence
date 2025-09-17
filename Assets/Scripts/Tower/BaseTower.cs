@@ -56,9 +56,10 @@ namespace TowerDefense.Towers
         /// <summary>
         /// Called by the BuildManager right after the tower is placed.
         /// </summary>
-        public void Initialize(TowerData data)
+        public void Initialize(TowerData data, TowerPlatform platform)
         {
             TowerData = data;
+            Platform = platform; // Store the reference to the platform
             ApplyUpgrade(0); // Set initial stats for level 0
         }
 

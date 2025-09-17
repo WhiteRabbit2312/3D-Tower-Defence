@@ -2,6 +2,7 @@ using TowerDefense.Data;
 using TowerDefense.Factories;
 using TowerDefense.Interfaces;
 using TowerDefense.Towers;
+using TowerDefense.UIMarket;
 using UnityEngine;
 using Zenject;
 
@@ -12,97 +13,93 @@ namespace TowerDefense.Managers
     /// </summary>
     public class BuildManager : MonoBehaviour
     {
-        private TowerData _selectedTowerData;
-        private BaseTower _towerGhost; // The semi-transparent preview of the tower
+       private TowerData _selectedTowerData;
+        private BaseTower _towerGhost;
 
+        // --- Dependencies ---
         private ITowerFactory _towerFactory;
         private EconomyManager _economyManager;
+        private UpgradeSellPanel _upgradeSellPanel;
         private Camera _mainCamera;
 
+        // --- State Cooldown ---
+        // A short cooldown to prevent the upgrade panel from opening in the same frame a tower is built or cancelled.
+        private float _platformClickCooldown;
+
         [Inject]
-        public void Construct(ITowerFactory towerFactory, EconomyManager economyManager)
+        public void Construct(
+            ITowerFactory towerFactory, 
+            EconomyManager economyManager, 
+            UpgradeSellPanel upgradeSellPanel)
         {
             _towerFactory = towerFactory;
             _economyManager = economyManager;
+            _upgradeSellPanel = upgradeSellPanel;
         }
 
         private void Awake()
         {
             _mainCamera = Camera.main;
         }
-
-        /// <summary>
-        /// Called from UI buttons to select which tower to build.
-        /// </summary>
+        
         public void SelectTowerToBuild(TowerData towerData)
         {
-            if (_economyManager.CurrentCurrency < towerData.BuildCost)
-            {
-                Debug.Log("Not enough currency to select this tower!");
-                return;
-            }
-
+            if (_economyManager.CurrentCurrency < towerData.BuildCost) return;
+            
+            _upgradeSellPanel.Hide();
             _selectedTowerData = towerData;
-
-            if (_towerGhost != null)
-            {
-                Destroy(_towerGhost.gameObject);
-            }
-
-            // Create a "ghost" preview of the tower
+            if (_towerGhost != null) Destroy(_towerGhost.gameObject);
             _towerGhost = Instantiate(_selectedTowerData.TowerPrefab);
-            _towerGhost.enabled = false; // Disable the tower's logic
-            // You can add logic here to make the ghost semi-transparent
+            _towerGhost.enabled = false;
         }
 
         private void Update()
         {
+            // Always update the cooldown timer.
+            if (_platformClickCooldown > 0)
+            {
+                _platformClickCooldown -= Time.deltaTime;
+            }
+
             if (_selectedTowerData != null)
             {
-                // Logic for build mode (moving ghost, placing, canceling)
                 MoveGhostToCursor();
-                if (Input.GetMouseButtonDown(0)) TryPlaceTower();
-                if (Input.GetMouseButtonDown(1)) CancelBuildMode();
+                
+                if (Input.GetMouseButtonDown(0))
+                {
+                    TryPlaceTower();
+                }
+
+                if (Input.GetMouseButtonDown(1))
+                {
+                    CancelBuildMode();
+                }
             }
             else
             {
-                // When not in build mode, check for clicks on existing towers to upgrade them.
                 HandlePlatformClicks();
             }
         }
 
         private void HandlePlatformClicks()
         {
+            // --- CRITICAL FIX ---
+            // We check the cooldown here. If a build/cancel action just happened, we ignore this click.
+            if (_platformClickCooldown > 0)
+            {
+                return;
+            }
+
             if (Input.GetMouseButtonDown(0))
             {
                 TowerPlatform platform = GetPlatformUnderCursor();
                 if (platform != null && platform.IsOccupied)
                 {
-                    platform.TryUpgradeTower();
-                }
-            }
-        }
-
-        private void MoveGhostToCursor()
-        {
-            if (_towerGhost == null) return;
-            
-            Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
-            // Raycast against a layer mask for the ground/platforms for better accuracy
-            if (Physics.Raycast(ray, out RaycastHit hit))
-            {
-                _towerGhost.transform.position = hit.point;
-                
-                TowerPlatform platform = hit.collider.GetComponent<TowerPlatform>();
-                if (platform != null && !platform.IsOccupied)
-                {
-                    // Snap ghost to the platform's center
-                    _towerGhost.transform.position = platform.transform.position;
-                    // Here you would change the ghost's color to indicate valid placement (e.g., green)
+                    _upgradeSellPanel.Show(platform.PlacedTower);
                 }
                 else
                 {
-                    // Here you would change the ghost's color to indicate invalid placement (e.g., red)
+                    _upgradeSellPanel.Hide();
                 }
             }
         }
@@ -110,35 +107,50 @@ namespace TowerDefense.Managers
         private void TryPlaceTower()
         {
             TowerPlatform platform = GetPlatformUnderCursor();
-
             if (platform != null && !platform.IsOccupied)
             {
                 if (_economyManager.TrySpendCurrency(_selectedTowerData.BuildCost))
                 {
                     BaseTower newTower = _towerFactory.CreateTower(_selectedTowerData, platform.transform.position);
-                    newTower.Initialize(_selectedTowerData);
+                    newTower.Initialize(_selectedTowerData, platform); 
                     platform.SetPlacedTower(newTower);
-                    // After placing, deselect the tower to prevent building multiple with one purchase
                     CancelBuildMode(); 
                 }
                 else
                 {
-                    Debug.Log("Something went wrong, not enough money!");
                     CancelBuildMode();
                 }
             }
         }
-
+        
         private void CancelBuildMode()
         {
-            if (_towerGhost != null)
-            {
-                Destroy(_towerGhost.gameObject);
-                _towerGhost = null;
-            }
+            if (_towerGhost != null) Destroy(_towerGhost.gameObject);
+            _towerGhost = null;
             _selectedTowerData = null;
+            
+            _upgradeSellPanel.Hide();
+
+            // --- CRITICAL FIX ---
+            // We start a short cooldown period. This is much more reliable than a single-frame flag.
+            _platformClickCooldown = 0.1f;
         }
 
+        private void MoveGhostToCursor()
+        {
+            if (_towerGhost == null) return;
+            Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit))
+            {
+                _towerGhost.transform.position = hit.point;
+                TowerPlatform platform = hit.collider.GetComponent<TowerPlatform>();
+                if (platform != null && !platform.IsOccupied)
+                {
+                    _towerGhost.transform.position = platform.transform.position;
+                }
+            }
+        }
+        
         private TowerPlatform GetPlatformUnderCursor()
         {
             Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
