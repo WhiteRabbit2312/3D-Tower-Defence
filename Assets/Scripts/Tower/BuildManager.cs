@@ -57,22 +57,17 @@ namespace TowerDefense.Managers
 
         private void Update()
         {
-            if (_selectedTowerData == null)
+            if (_selectedTowerData != null)
             {
-                HandlePlatformClicks(); // Allow upgrading even when not in build mode
-                return; // Not in build mode
+                // Logic for build mode (moving ghost, placing, canceling)
+                MoveGhostToCursor();
+                if (Input.GetMouseButtonDown(0)) TryPlaceTower();
+                if (Input.GetMouseButtonDown(1)) CancelBuildMode();
             }
-            
-            MoveGhostToCursor();
-
-            if (Input.GetMouseButtonDown(0)) // Left Click to place
+            else
             {
-                TryPlaceTower();
-            }
-
-            if (Input.GetMouseButtonDown(1)) // Right Click to cancel
-            {
-                CancelBuildMode();
+                // When not in build mode, check for clicks on existing towers to upgrade them.
+                HandlePlatformClicks();
             }
         }
 

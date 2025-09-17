@@ -12,15 +12,15 @@ namespace TowerDefense.Towers
     /// </summary>
     public class TowerPlatform : MonoBehaviour
     {
-        private BaseTower _placedTower;
-        public bool IsOccupied => _placedTower != null;
-
+        public BaseTower PlacedTower { get; private set; }
+        public bool IsOccupied => PlacedTower != null;
+        
         /// <summary>
         /// Assigns a tower to this platform, marking it as occupied.
         /// </summary>
         public void SetPlacedTower(BaseTower tower)
         {
-            _placedTower = tower;
+            PlacedTower = tower;
         }
 
         /// <summary>
@@ -30,8 +30,13 @@ namespace TowerDefense.Towers
         {
             if (IsOccupied)
             {
-                _placedTower.Upgrade();
+                PlacedTower.Upgrade();
             }
+        }
+        
+        public void ClearPlacedTower()
+        {
+            PlacedTower = null;
         }
     }
 }

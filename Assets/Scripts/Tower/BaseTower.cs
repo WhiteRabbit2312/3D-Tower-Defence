@@ -28,12 +28,13 @@ namespace TowerDefense.Towers
 
         // Public property to hold tower-specific data, assigned by BuildManager
         public TowerData TowerData { get; private set; }
+        public TowerPlatform Platform { get; private set; }
+        public int CurrentLevel { get; private set; } = 0;
 
         // Protected fields for subclasses, capitalized as per convention
         protected ITargetable CurrentTarget;
         protected EnemyManager EnemyManager;
         protected EconomyManager EconomyManager;
-        protected int CurrentLevel = 0;
         protected float FireCooldown = 0f;
         
         // Current stats, derived from TowerData and current level
@@ -143,6 +144,17 @@ namespace TowerDefense.Towers
             {
                 Debug.Log("Not enough currency to upgrade.");
             }
+        }
+        
+        public int GetTotalInvestedCost()
+        {
+            int totalCost = TowerData.BuildCost;
+            // Sums up the cost of all upgrades up to the current level
+            for (int i = 1; i <= CurrentLevel; i++)
+            {
+                totalCost += TowerData.GetUpgradeCost(i);
+            }
+            return totalCost;
         }
         
         protected void ApplyUpgrade(int level)

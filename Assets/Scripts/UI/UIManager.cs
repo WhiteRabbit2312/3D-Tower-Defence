@@ -5,6 +5,7 @@ namespace TowerDefense.UIMarket
     public class UIManager
     {
         private UIScreen _currentScreen;
+        private UIPopup _currentPopup;
 
         public void OpenScreen(UIScreen screen)
         {
@@ -23,6 +24,26 @@ namespace TowerDefense.UIMarket
             {
                 _currentScreen.Close();
                 _currentScreen = null;
+            }
+        }
+        
+        public void OpenPopup(UIPopup popup)
+        {
+            if (_currentPopup != null && _currentPopup != popup)
+            {
+                _currentPopup.Close();
+            }
+
+            _currentPopup = popup;
+            _currentPopup.Open();
+        }
+
+        public void ClosePopup(UIPopup popup)
+        {
+            if (_currentPopup == popup)
+            {
+                _currentPopup.Close();
+                _currentPopup = null;
             }
         }
     }
