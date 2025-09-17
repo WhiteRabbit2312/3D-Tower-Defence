@@ -46,7 +46,7 @@ namespace TowerDefense.Managers
         {
             if (_economyManager.CurrentCurrency < towerData.BuildCost) return;
             
-            _upgradeSellPanel.Hide();
+            //_upgradeSellPanel.Hide();
             _selectedTowerData = towerData;
             if (_towerGhost != null) Destroy(_towerGhost.gameObject);
             _towerGhost = Instantiate(_selectedTowerData.TowerPrefab);
@@ -97,10 +97,6 @@ namespace TowerDefense.Managers
                 {
                     _upgradeSellPanel.Show(platform.PlacedTower);
                 }
-                else
-                {
-                    _upgradeSellPanel.Hide();
-                }
             }
         }
 
@@ -129,7 +125,7 @@ namespace TowerDefense.Managers
             _towerGhost = null;
             _selectedTowerData = null;
             
-            _upgradeSellPanel.Hide();
+            //_upgradeSellPanel.Hide();
 
             // --- CRITICAL FIX ---
             // We start a short cooldown period. This is much more reliable than a single-frame flag.

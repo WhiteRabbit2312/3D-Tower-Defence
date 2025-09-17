@@ -10,34 +10,56 @@ namespace TowerDefense.Data
     [CreateAssetMenu(fileName = "NewSlowingTowerData", menuName = "Tower Defense/Tower Data/Slowing Tower")]
     public class SlowingTowerData : TowerData
     {
-        // This struct only contains fields relevant to a slowing tower.
-        [Serializable]
-        public struct SlowUpgradeLevel
+        [SerializeField] private float _baseRange = 12f;
+        [SerializeField] private float _baseFireRate = 1.5f; // Time between shots
+        [SerializeField, Range(0f, 1f)] private float _baseSlowMultiplier = 0.7f; // 30% slow
+        [SerializeField] private float _baseSlowDuration = 2f;
+
+        [Header("Infinite Upgrade Scaling")]
+        [SerializeField] private int _baseUpgradeCost = 75;
+        [Tooltip("Each level costs this much more than the last (e.g., 1.3 = +30% cost per level).")]
+        [SerializeField] private float _costGrowthFactor = 1.3f;
+        [SerializeField] private float _rangeIncreasePerLevel = 1.5f;
+        [Tooltip("How much the slow effect improves per level (closer to 0).")]
+        [SerializeField] private float _slowEffectIncreasePerLevel = 0.02f;
+        [Tooltip("How much the slow duration increases per level.")]
+        [SerializeField] private float _slowDurationIncreasePerLevel = 0.1f;
+
+
+        // --- Method Implementations ---
+
+        public override int GetUpgradeCost(int toLevel)
         {
-            [Tooltip("Cost to upgrade to this level.")]
-            public int Cost;
-            [Tooltip("Attack range in Unity units for this level.")]
-            public float Range;
-            [Tooltip("Time in seconds between shots for this level.")]
-            public float FireRate;
-            [Tooltip("The speed multiplier (e.g., 0.5 for 50% slow). 1 means no slow.")]
-            [Range(0f, 1f)] public float SlowMultiplier;
-            [Tooltip("How long the slow effect lasts in seconds.")]
-            public float SlowDuration;
+            // Cost grows exponentially
+            return (int)(_baseUpgradeCost * Mathf.Pow(_costGrowthFactor, toLevel - 1));
         }
 
-        [Header("Slowing Tower Upgrades")]
-        public List<SlowUpgradeLevel> UpgradeLevels = new List<SlowUpgradeLevel>();
+        public override float GetRange(int level)
+        {
+            // Range grows linearly
+            return _baseRange + (_rangeIncreasePerLevel * level);
+        }
 
-        // Implementation of the abstract contract from TowerData
-        public override int GetMaxLevel() => UpgradeLevels.Count;
-        public override int GetUpgradeCost(int level) => (level < UpgradeLevels.Count) ? UpgradeLevels[level].Cost : int.MaxValue;
-        public override float GetRange(int level) => (level < UpgradeLevels.Count) ? UpgradeLevels[level].Range : 0;
-        public override float GetFireRate(int level) => (level < UpgradeLevels.Count) ? UpgradeLevels[level].FireRate : 0;
-        public override float GetSlowMultiplier(int level) => (level < UpgradeLevels.Count) ? UpgradeLevels[level].SlowMultiplier : 1f;
-        public override float GetSlowDuration(int level) => (level < UpgradeLevels.Count) ? UpgradeLevels[level].SlowDuration : 0f;
+        public override float GetFireRate(int level)
+        {
+            // For this tower, fire rate does not change with upgrades.
+            return _baseFireRate;
+        }
 
-        // This tower doesn't deal damage, so we return a default value.
+        public override float GetSlowMultiplier(int level)
+        {
+            // The slow multiplier decreases (gets stronger) with each level.
+            // We use Mathf.Max to ensure it doesn't become too strong (e.g., less than 10%).
+            return Mathf.Max(0.1f, _baseSlowMultiplier - (_slowEffectIncreasePerLevel * level));
+        }
+
+        public override float GetSlowDuration(int level)
+        {
+            // Slow duration increases linearly
+            return _baseSlowDuration + (_slowDurationIncreasePerLevel * level);
+        }
+
+        // This tower type does not deal damage, so it returns a neutral value.
         public override float GetDamage(int level) => 0f;
     }
 }

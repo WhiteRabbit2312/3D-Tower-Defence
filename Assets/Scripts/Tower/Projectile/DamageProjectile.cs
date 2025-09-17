@@ -18,10 +18,8 @@ namespace TowerDefense.Towers.Projectiles
 
         protected override void OnHitTarget()
         {
-            Debug.LogError("OnHitTarget");
             if (Target is IEffectable effectableTarget)
             {
-                Debug.LogError("OnHitTarget1");
                 effectableTarget.TakeDamage(_damage);
             }
             Destroy(gameObject);

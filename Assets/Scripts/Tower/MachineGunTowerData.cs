@@ -10,31 +10,47 @@ namespace TowerDefense.Data
     [CreateAssetMenu(fileName = "NewMachineGunTowerData", menuName = "Tower Defense/Tower Data/Machine Gun Tower")]
     public class MachineGunTowerData : TowerData
     {
-        // This struct now only contains fields relevant to a damage tower.
-        [Serializable]
-        public struct DamageUpgradeLevel
+        [SerializeField] private float _baseDamage = 10f;
+        [SerializeField] private float _baseRange = 15f;
+        [SerializeField] private float _baseFireRate = 1f; // Time between shots
+
+        [Header("Infinite Upgrade Scaling")]
+        [SerializeField] private int _baseUpgradeCost = 50;
+        [Tooltip("Each level costs this much more than the last (e.g., 1.2 = +20% cost per level).")]
+        [SerializeField] private float _costGrowthFactor = 1.2f;
+        [SerializeField] private float _damageIncreasePerLevel = 5f;
+        [SerializeField] private float _rangeIncreasePerLevel = 1f;
+        [Tooltip("How much the time between shots decreases per level.")]
+        [SerializeField] private float _fireRateDecreasePerLevel = 0.05f;
+
+        // --- Method Implementations ---
+
+        public override int GetUpgradeCost(int toLevel)
         {
-            [Tooltip("Cost to upgrade to this level.")]
-            public int Cost;
-            [Tooltip("Damage per shot for this level.")]
-            public float Damage;
-            [Tooltip("Attack range in Unity units for this level.")]
-            public float Range;
-            [Tooltip("Time in seconds between shots for this level.")]
-            public float FireRate;
+            // Cost grows exponentially based on the level
+            return (int)(_baseUpgradeCost * Mathf.Pow(_costGrowthFactor, toLevel - 1));
         }
 
-        [Header("Machine Gun Upgrades")]
-        public List<DamageUpgradeLevel> UpgradeLevels = new List<DamageUpgradeLevel>();
+        public override float GetDamage(int level)
+        {
+            // Damage grows linearly
+            return _baseDamage + (_damageIncreasePerLevel * level);
+        }
 
-        // Implementation of the abstract contract from TowerData
-        public override int GetMaxLevel() => UpgradeLevels.Count;
-        public override int GetUpgradeCost(int level) => (level < UpgradeLevels.Count) ? UpgradeLevels[level].Cost : int.MaxValue;
-        public override float GetDamage(int level) => (level < UpgradeLevels.Count) ? UpgradeLevels[level].Damage : 0;
-        public override float GetRange(int level) => (level < UpgradeLevels.Count) ? UpgradeLevels[level].Range : 0;
-        public override float GetFireRate(int level) => (level < UpgradeLevels.Count) ? UpgradeLevels[level].FireRate : 0;
+        public override float GetRange(int level)
+        {
+            // Range grows linearly
+            return _baseRange + (_rangeIncreasePerLevel * level);
+        }
 
-        // This tower doesn't slow, so we return default "no-effect" values.
+        public override float GetFireRate(int level)
+        {
+            // Fire rate (time between shots) decreases, making the tower faster.
+            // We use Mathf.Max to ensure it never drops below a minimum value.
+            return Mathf.Max(0.1f, _baseFireRate - (_fireRateDecreasePerLevel * level));
+        }
+
+        // This tower type does not slow enemies, so it returns neutral values.
         public override float GetSlowMultiplier(int level) => 1f;
         public override float GetSlowDuration(int level) => 0f;
     }

@@ -26,18 +26,15 @@ namespace TowerDefense.Towers
         [Tooltip("The speed at which projectiles from this tower travel.")]
         [SerializeField] protected float ProjectileSpeed = 50f;
 
-        // Public property to hold tower-specific data, assigned by BuildManager
         public TowerData TowerData { get; private set; }
         public TowerPlatform Platform { get; private set; }
         public int CurrentLevel { get; private set; } = 0;
 
-        // Protected fields for subclasses, capitalized as per convention
         protected ITargetable CurrentTarget;
         protected EnemyManager EnemyManager;
         protected EconomyManager EconomyManager;
         protected float FireCooldown = 0f;
         
-        // Current stats, derived from TowerData and current level
         protected float CurrentDamage;
         protected float CurrentRange;
         protected float CurrentFireRate;
@@ -53,14 +50,11 @@ namespace TowerDefense.Towers
             EconomyManager = economyManager;
         }
 
-        /// <summary>
-        /// Called by the BuildManager right after the tower is placed.
-        /// </summary>
         public void Initialize(TowerData data, TowerPlatform platform)
         {
             TowerData = data;
-            Platform = platform; // Store the reference to the platform
-            ApplyUpgrade(0); // Set initial stats for level 0
+            Platform = platform;
+            ApplyUpgrade(0); 
         }
 
         protected virtual void Update()
@@ -130,11 +124,8 @@ namespace TowerDefense.Towers
         public void Upgrade()
         {
             int nextLevel = CurrentLevel + 1;
-            if (nextLevel >= TowerData.GetMaxLevel())
-            {
-                Debug.Log("Tower is at max level.");
-                return;
-            }
+            
+            // The check for max level is now removed to support infinite upgrades.
 
             int upgradeCost = TowerData.GetUpgradeCost(nextLevel);
             if (EconomyManager.TrySpendCurrency(upgradeCost))
@@ -150,7 +141,6 @@ namespace TowerDefense.Towers
         public int GetTotalInvestedCost()
         {
             int totalCost = TowerData.BuildCost;
-            // Sums up the cost of all upgrades up to the current level
             for (int i = 1; i <= CurrentLevel; i++)
             {
                 totalCost += TowerData.GetUpgradeCost(i);
@@ -168,10 +158,6 @@ namespace TowerDefense.Towers
             CurrentSlowDuration = TowerData.GetSlowDuration(level);
         }
         
-        /// <summary>
-        /// Abstract method for firing. Each subclass MUST implement this
-        /// to define its specific firing behavior (e.g., create a projectile).
-        /// </summary>
         protected abstract void Fire();
         
         protected virtual void OnDrawGizmosSelected()

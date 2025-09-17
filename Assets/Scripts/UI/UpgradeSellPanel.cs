@@ -16,84 +16,66 @@ namespace TowerDefense.UIMarket
         [Header("Panel-Specific References")]
         [SerializeField] private Button _upgradeButton;
         [SerializeField] private Button _sellButton;
+        [SerializeField] private Button _denyButton;
         [SerializeField] private TextMeshProUGUI _upgradeCostText;
         [SerializeField] private TextMeshProUGUI _sellValueText;
+        [SerializeField] private TextMeshProUGUI _towerLevelText;
 
-        private BaseTower _selectedTower;
+         private BaseTower _selectedTower;
         private EconomyManager _economyManager;
 
-        // The UIManager is already injected in the base class (UIWindowBase)
-        // We just need to inject our other dependencies.
         [Inject]
         public void Construct(EconomyManager economyManager)
         {
             _economyManager = economyManager;
         }
 
-        /// <summary>
-        /// We override Awake to provide our own logic instead of the base UIPopup's logic.
-        /// </summary>
         protected override void Awake()
         {
-            // Call the base Awake from UIWindowBase to initialize the CanvasGroup
             base.Awake(); 
             
             _upgradeButton.onClick.AddListener(OnUpgradePressed);
-            _sellButton.onClick.AddListener(OnSellPressed);
-            
-            // Start hidden using the inherited method
-            Close(); 
+            _sellButton.onClick.AddListener(OnSellPressed); 
+            _denyButton.onClick.AddListener(Hide); 
         }
 
-        /// <summary>
-        /// Shows the panel for a specific tower. This is the entry point called by BuildManager.
-        /// </summary>
         public void Show(BaseTower tower)
         {
             _selectedTower = tower;
-            transform.position = _selectedTower.transform.position;
+            // You might want to position the panel above the tower
+            // This requires converting world position to screen/canvas position
+            // For now, we'll just show it.
             UpdatePanelInfo();
-            
-            // Use the inherited Open() method to show the UI
             Open();
         }
 
-        /// <summary>
-        /// Hides the panel from view.
-        /// </summary>
         public void Hide()
         {
-            // Use the inherited Close() method to hide the UI
             Close();
             _selectedTower = null;
         }
 
-        /// <summary>
-        /// Updates the text on the buttons based on the selected tower's state.
-        /// </summary>
         private void UpdatePanelInfo()
         {
             if (_selectedTower == null) return;
             
+            // Display current tower level
+            if (_towerLevelText != null)
+            {
+                _towerLevelText.text = $"Level: {_selectedTower.CurrentLevel}";
+            }
+
             // Update Sell Button
             int sellValue = _selectedTower.GetTotalInvestedCost() / 2; // 50% refund
             _sellValueText.text = $"Sell\n(${sellValue})";
 
-            // Update Upgrade Button
+            // --- CRITICAL FIX FOR INFINITE UPGRADES ---
+            // We no longer check for a max level. We always calculate the next one.
             int nextLevel = _selectedTower.CurrentLevel + 1;
-            if (nextLevel >= _selectedTower.TowerData.GetMaxLevel())
-            {
-                _upgradeButton.interactable = false;
-                _upgradeCostText.text = "MAX";
-            }
-            else
-            {
-                _upgradeButton.interactable = true;
-                int upgradeCost = _selectedTower.TowerData.GetUpgradeCost(nextLevel);
-                _upgradeCostText.text = $"Upgrade\n(${upgradeCost})";
-                // Optionally, disable button if player can't afford it
-                _upgradeButton.interactable = _economyManager.CurrentCurrency >= upgradeCost;
-            }
+            int upgradeCost = _selectedTower.TowerData.GetUpgradeCost(nextLevel);
+
+            _upgradeCostText.text = $"Upgrade\n(${upgradeCost})";
+            _upgradeButton.interactable = _economyManager.CurrentCurrency >= upgradeCost;
         }
 
         private void OnUpgradePressed()
@@ -101,8 +83,7 @@ namespace TowerDefense.UIMarket
             if (_selectedTower != null)
             {
                 _selectedTower.Upgrade();
-                // After upgrading, update the panel info again.
-                // If the player can't afford the next upgrade, the button will become disabled.
+                // After upgrading, update the panel info again for the next level.
                 UpdatePanelInfo();
             }
         }
@@ -119,7 +100,5 @@ namespace TowerDefense.UIMarket
                 Hide();
             }
         }
-        
-        // We don't need OnDestroy because we are not using the base popup's button logic.
     }
 }

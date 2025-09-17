@@ -46,6 +46,7 @@ namespace TowerDefense.Managers
 
         public void AddCurrency(int amount)
         {
+            Debug.LogError("AddCurrency");
             CurrentCurrency += amount;
             OnCurrencyChanged?.Invoke(CurrentCurrency);
         }

@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace TowerDefense.UIMarket
 {
     public abstract class UIPopup : UIWindowBase
@@ -12,6 +14,7 @@ namespace TowerDefense.UIMarket
 
             if (CloseButton != null)
             {
+                Debug.LogError("close2");
                 CloseButton.onClick.AddListener(() => UiManager.ClosePopup(this));
             }
         }

@@ -35,6 +35,7 @@ namespace TowerDefense.UIMarket
 
         public virtual void Close()
         {
+            Debug.LogError("Close");
             Window.alpha = 0f;
             Window.interactable = false;
             Window.blocksRaycasts = false;
