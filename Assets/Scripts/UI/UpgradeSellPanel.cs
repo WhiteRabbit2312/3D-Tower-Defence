@@ -17,7 +17,8 @@ namespace TowerDefense.UI
         [Header("Buttons")]
         [SerializeField] private Button _upgradeButton;
         [SerializeField] private Button _sellButton;
-        [SerializeField] private Button _denyButton; // Assuming this is a close button
+        [SerializeField] private Button _denyButton;
+        [SerializeField] private Button _priorityButton;
 
         [Header("Info Texts")]
         [SerializeField] private TextMeshProUGUI _towerLevelText;
@@ -45,6 +46,7 @@ namespace TowerDefense.UI
             base.Awake(); 
             _upgradeButton.onClick.AddListener(OnUpgradePressed);
             _sellButton.onClick.AddListener(OnSellPressed); 
+            _priorityButton.onClick.AddListener(OnPriorityPressed);
             if (_denyButton != null) _denyButton.onClick.AddListener(Hide);
             
             Close(); 
@@ -81,8 +83,11 @@ namespace TowerDefense.UI
             // Update damage text (common for both towers)
             UpdateStatText(_damageText, "Damage", towerData.GetDamage(currentLevel), towerData.GetDamage(nextLevel));
             
-            // --- NEW CONTEXT-AWARE LOGIC ---
-            // Check the specific type of TowerData to decide what to display in the special stat text field.
+            if (_priorityButton != null)
+            {
+                _priorityButton.GetComponentInChildren<TMP_Text>().text = $"Priority:\n{_selectedTower.CurrentPriority}";
+            }
+            
             if (towerData is MachineGunTowerData)
             {
                 _specialStatText.gameObject.SetActive(true);
@@ -144,6 +149,15 @@ namespace TowerDefense.UI
                 _selectedTower.Platform.ClearPlacedTower(); 
                 Destroy(_selectedTower.gameObject);
                 Hide();
+            }
+        }
+        
+        private void OnPriorityPressed()
+        {
+            if (_selectedTower != null)
+            {
+                _selectedTower.CycleTargetingPriority();
+                UpdatePanelInfo();
             }
         }
     }
