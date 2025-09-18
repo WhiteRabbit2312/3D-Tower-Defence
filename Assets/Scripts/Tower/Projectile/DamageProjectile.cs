@@ -1,3 +1,4 @@
+using TowerDefense.Enemies;
 using TowerDefense.Interfaces;
 using UnityEngine;
 
@@ -18,9 +19,11 @@ namespace TowerDefense.Towers.Projectiles
 
         protected override void OnHitTarget()
         {
-            if (Target is IEffectable effectableTarget)
+            // To deal damage, we need to access the TakeDamage method,
+            // which is on the concrete BaseEnemy class.
+            if (Target is BaseEnemy enemyTarget)
             {
-                effectableTarget.TakeDamage(_damage);
+                enemyTarget.TakeDamage(_damage);
             }
             Destroy(gameObject);
         }

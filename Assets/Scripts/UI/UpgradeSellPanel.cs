@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 using TMPro;
+using TowerDefense.Data;
 
 namespace TowerDefense.UI
 {
@@ -13,16 +14,25 @@ namespace TowerDefense.UI
     /// </summary>
     public class UpgradeSellPanel : UIPopup // Inherit from your UIPopup
     {
-        [Header("Panel-Specific References")]
+        [Header("Buttons")]
         [SerializeField] private Button _upgradeButton;
         [SerializeField] private Button _sellButton;
-        [SerializeField] private Button _denyButton;
+        [SerializeField] private Button _denyButton; // Assuming this is a close button
+
+        [Header("Info Texts")]
+        [SerializeField] private TextMeshProUGUI _towerLevelText;
         [SerializeField] private TextMeshProUGUI _upgradeCostText;
         [SerializeField] private TextMeshProUGUI _sellValueText;
-        [SerializeField] private TextMeshProUGUI _towerLevelText;
+        
+        [Header("Stat Display Texts")]
+        [SerializeField] private TextMeshProUGUI _damageText;
+        [SerializeField] private TextMeshProUGUI _specialStatText;
 
-         private BaseTower _selectedTower;
+        private BaseTower _selectedTower;
         private EconomyManager _economyManager;
+        
+        // A color to indicate that a stat will improve.
+        private readonly Color _upgradeColor = Color.green;
 
         [Inject]
         public void Construct(EconomyManager economyManager)
@@ -33,18 +43,16 @@ namespace TowerDefense.UI
         protected override void Awake()
         {
             base.Awake(); 
-            
             _upgradeButton.onClick.AddListener(OnUpgradePressed);
             _sellButton.onClick.AddListener(OnSellPressed); 
-            _denyButton.onClick.AddListener(Hide); 
+            if (_denyButton != null) _denyButton.onClick.AddListener(Hide);
+            
+            Close(); 
         }
 
         public void Show(BaseTower tower)
         {
             _selectedTower = tower;
-            // You might want to position the panel above the tower
-            // This requires converting world position to screen/canvas position
-            // For now, we'll just show it.
             UpdatePanelInfo();
             Open();
         }
@@ -59,23 +67,63 @@ namespace TowerDefense.UI
         {
             if (_selectedTower == null) return;
             
-            // Display current tower level
-            if (_towerLevelText != null)
-            {
-                _towerLevelText.text = $"Level: {_selectedTower.CurrentLevel}";
-            }
-
-            // Update Sell Button
-            int sellValue = _selectedTower.GetTotalInvestedCost() / 2; // 50% refund
-            _sellValueText.text = $"Sell\n(${sellValue})";
-
-            // --- CRITICAL FIX FOR INFINITE UPGRADES ---
-            // We no longer check for a max level. We always calculate the next one.
-            int nextLevel = _selectedTower.CurrentLevel + 1;
-            int upgradeCost = _selectedTower.TowerData.GetUpgradeCost(nextLevel);
-
-            _upgradeCostText.text = $"Upgrade\n(${upgradeCost})";
+            var towerData = _selectedTower.TowerData;
+            int currentLevel = _selectedTower.CurrentLevel;
+            int nextLevel = currentLevel + 1;
+            
+            _towerLevelText.text = $"Level: {currentLevel}";
+            int sellValue = _selectedTower.GetTotalInvestedCost() / 2;
+            _sellValueText.text = $"Sell (${sellValue})";
+            int upgradeCost = towerData.GetUpgradeCost(nextLevel);
+            _upgradeCostText.text = $"Upgrade (${upgradeCost})";
             _upgradeButton.interactable = _economyManager.CurrentCurrency >= upgradeCost;
+
+            // Update damage text (common for both towers)
+            UpdateStatText(_damageText, "Damage", towerData.GetDamage(currentLevel), towerData.GetDamage(nextLevel));
+            
+            // --- NEW CONTEXT-AWARE LOGIC ---
+            // Check the specific type of TowerData to decide what to display in the special stat text field.
+            if (towerData is MachineGunTowerData)
+            {
+                _specialStatText.gameObject.SetActive(true);
+                UpdateStatText(_specialStatText, "Range", towerData.GetRange(currentLevel), towerData.GetRange(nextLevel));
+            }
+            else if (towerData is SlowingTowerData)
+            {
+                _specialStatText.gameObject.SetActive(true);
+                float currentSlowPercent = (1 - towerData.GetSlowMultiplier(currentLevel)) * 100;
+                float nextSlowPercent = (1 - towerData.GetSlowMultiplier(nextLevel)) * 100;
+                UpdateStatText(_specialStatText, "Slow", currentSlowPercent, nextSlowPercent, "%");
+            }
+            else
+            {
+                // If it's another tower type in the future without a special stat, hide the text field.
+                if (_specialStatText != null)
+                {
+                    _specialStatText.gameObject.SetActive(false);
+                }
+            }
+        }
+
+        /// <summary>
+        /// A helper method to format the stat text and color it green if it improves.
+        /// </summary>
+        private void UpdateStatText(TextMeshProUGUI textField, string label, float currentValue, float nextValue, string suffix = "")
+        {
+            if (textField == null) return;
+
+            textField.color = Color.white;
+            
+            string baseText = $"{label}: {currentValue:F1}{suffix}";
+            
+            if (nextValue > currentValue)
+            {
+                textField.text = $"{baseText} -> <color=#{ColorUtility.ToHtmlStringRGB(_upgradeColor)}>{nextValue:F1}{suffix}</color>";
+            }
+            else
+            {
+                textField.text = baseText;
+            }
         }
 
         private void OnUpgradePressed()
@@ -83,7 +131,6 @@ namespace TowerDefense.UI
             if (_selectedTower != null)
             {
                 _selectedTower.Upgrade();
-                // After upgrading, update the panel info again for the next level.
                 UpdatePanelInfo();
             }
         }
@@ -94,7 +141,6 @@ namespace TowerDefense.UI
             {
                 int sellValue = _selectedTower.GetTotalInvestedCost() / 2;
                 _economyManager.AddCurrency(sellValue);
-                
                 _selectedTower.Platform.ClearPlacedTower(); 
                 Destroy(_selectedTower.gameObject);
                 Hide();

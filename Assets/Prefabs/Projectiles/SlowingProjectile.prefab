@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1156477810789962922}
   - component: {fileID: 3939431202680682609}
   - component: {fileID: 327162303070513441}
-  - component: {fileID: 8448576071625396945}
+  - component: {fileID: 8938728339922867192}
   m_Layer: 0
   m_Name: SlowingProjectile
   m_TagString: Untagged
@@ -137,7 +137,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &8448576071625396945
+--- !u!114 &8938728339922867192
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -146,6 +146,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 2045117258847649297}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68c497721855f9249b3afa6cf7338da5, type: 3}
+  m_Script: {fileID: 11500000, guid: 53ece219bd51bc740a9258e2b7362777, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
