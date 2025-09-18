@@ -4,6 +4,7 @@ using TowerDefense.Enemies;
 using TowerDefense.Interfaces;
 using TowerDefense.Signals;
 using System.Collections.Generic;
+using System.Linq;
 
 
 namespace TowerDefense.Managers
@@ -78,6 +79,21 @@ namespace TowerDefense.Managers
                 _signalBus.Fire(new WaveClearedSignal());
                 Debug.Log("Wave Cleared!");
             }
+        }
+        
+        public void DestroyAllEnemies()
+        {
+            // We iterate over a copy of the list because the original list will be modified
+            // inside the loop when enemies are destroyed and fire their death signals.
+            foreach (var enemy in ActiveEnemies.ToList())
+            {
+                if (enemy != null && enemy.GetTransform() != null)
+                {
+                    Destroy(enemy.GetTransform().gameObject);
+                }
+            }
+            // Clear the list to ensure a clean state.
+            ActiveEnemies.Clear();
         }
     }
 }

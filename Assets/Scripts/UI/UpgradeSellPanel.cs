@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using Zenject;
 using TMPro;
 
-namespace TowerDefense.UIMarket
+namespace TowerDefense.UI
 {
     /// <summary>
     /// Manages the UI panel that appears when a built tower is clicked.

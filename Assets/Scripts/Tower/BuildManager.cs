@@ -3,7 +3,7 @@ using TowerDefense.Factories;
 using TowerDefense.Interfaces;
 using TowerDefense.Signals;
 using TowerDefense.Towers;
-using TowerDefense.UIMarket;
+using TowerDefense.UI;
 using UnityEngine;
 using Zenject;
 

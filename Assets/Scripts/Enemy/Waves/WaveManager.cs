@@ -12,6 +12,8 @@ namespace TowerDefense.Managers
 {
     public class WaveManager : MonoBehaviour
     {
+        private static bool _hasInstanceAwoken = false;
+        private int _instanceId;
         [Header("Wave Progression")]
         [SerializeField] private int _initialEnemyCount = 10;
         [SerializeField] [Range(1.0f, 2.0f)] private float _enemyCountMultiplier = 1.5f;
@@ -30,6 +32,7 @@ namespace TowerDefense.Managers
         
         private float _currentHealthMultiplier = 1f;
         private int _enemiesForNextWave;
+        private bool _isSpawningStopped = false; 
 
         private Transform _spawnPoint;
         private IEnemyFactory _enemyFactory;
@@ -47,6 +50,25 @@ namespace TowerDefense.Managers
             _enemyFactory = enemyFactory;
             _enemyManager = enemyManager;
             _signalBus = signalBus;
+        }
+        
+        private void Awake()
+        {
+            _instanceId = Random.Range(1000, 9999);
+            Debug.Log($"WaveManager [{_instanceId}] AWAKE on GameObject '{this.gameObject.name}'.");
+
+            // --- THE TRAP ---
+            // If the flag is already true, it means another WaveManager has already run its Awake method.
+            // This MUST be the second, unwanted instance.
+            if (_hasInstanceAwoken)
+            {
+                Debug.LogError($"--- DUPLICATE WaveManager DETECTED! --- Instance [{_instanceId}] on GameObject '{this.gameObject.name}' is the second instance. The editor will now pause. Please delete this GameObject from the scene hierarchy.", this.gameObject);
+                Debug.Break(); // This will pause the Unity Editor.
+                return;
+            }
+
+            // If this is the first instance, set the flag to true.
+            _hasInstanceAwoken = true;
         }
 
         private void OnEnable()
@@ -70,6 +92,13 @@ namespace TowerDefense.Managers
             yield return new WaitForSeconds(_initialDelay);
             StartNextWave();
         }
+        
+        public void StopSpawning()
+        {
+            _isSpawningStopped = true;
+            StopAllCoroutines();
+            Debug.Log("Wave spawning has been stopped.");
+        }
 
         private void OnWaveCleared()
         {
@@ -78,6 +107,7 @@ namespace TowerDefense.Managers
 
         private IEnumerator StartNextWaveWithDelay()
         {
+            if (_isSpawningStopped) yield break;
             yield return new WaitForSeconds(_timeBetweenWaves);
             StartNextWave();
         }
@@ -97,6 +127,7 @@ namespace TowerDefense.Managers
             
             for (int i = 0; i < _enemiesForNextWave; i++)
             {
+                if (_isSpawningStopped) yield break;
                 EnemyData enemyToSpawn = GetRandomEnemy();
                 if (enemyToSpawn != null)
                 {

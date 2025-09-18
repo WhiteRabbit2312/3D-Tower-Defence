@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace TowerDefense.UIMarket
+namespace TowerDefense.UI
 {
     public abstract class UIPopup : UIWindowBase
     {

@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace TowerDefense.UIMarket
+namespace TowerDefense.UI
 {
     public abstract class UIWindowBase : MonoBehaviour
     {
@@ -28,6 +28,8 @@ namespace TowerDefense.UIMarket
 
         public virtual void Open()
         {
+            Debug.LogError("Open");
+
             Window.alpha = 1f;
             Window.interactable = true;
             Window.blocksRaycasts = true;
@@ -35,7 +37,6 @@ namespace TowerDefense.UIMarket
 
         public virtual void Close()
         {
-            Debug.LogError("Close");
             Window.alpha = 0f;
             Window.interactable = false;
             Window.blocksRaycasts = false;

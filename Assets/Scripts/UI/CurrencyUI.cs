@@ -3,7 +3,7 @@ using TowerDefense.Managers;
 using UnityEngine;
 using Zenject;
 
-namespace TowerDefense.UIMarket
+namespace TowerDefense.UI
 {
     /// <summary>
     /// Updates the UI text element to display the player's current currency.

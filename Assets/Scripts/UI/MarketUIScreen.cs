@@ -2,7 +2,7 @@ using TowerDefense.Signals;
 using UnityEngine;
 using Zenject;
 
-namespace TowerDefense.UIMarket
+namespace TowerDefense.UI
 {
     public class MarketUIScreen : UIScreen
     {
