@@ -49,7 +49,7 @@ MonoBehaviour:
   _healthMultiplier: 1.6
   _initialDelay: 2
   _timeBetweenWaves: 4
-  _timeBetweenEnemies: 1.5
+  _timeBetweenEnemies: 1.7
   _spawnableEnemies:
   - EnemyData: {fileID: 11400000, guid: df96c8fab8b1ead43b7e133d53dd9f1e, type: 2}
     SpawnChance: 60

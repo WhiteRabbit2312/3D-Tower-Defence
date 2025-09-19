@@ -21,6 +21,6 @@ MonoBehaviour:
   _baseSlowDuration: 2
   _baseUpgradeCost: 100
   _costGrowthFactor: 1.3
-  _damageIncreasePerLevel: 5
+  _damageIncreasePerLevel: 7
   _maxSlowMultiplier: 1
   _slowEffectIncreasePerLevel: 0.05

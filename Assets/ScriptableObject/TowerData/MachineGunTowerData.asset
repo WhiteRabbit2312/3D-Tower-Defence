@@ -19,6 +19,6 @@ MonoBehaviour:
   _baseFireRate: 1
   _baseUpgradeCost: 60
   _costGrowthFactor: 1.3
-  _damageIncreasePerLevel: 15
+  _damageIncreasePerLevel: 20
   _maxRangeLevel: 6
   _rangeIncreasePerLevel: 2
