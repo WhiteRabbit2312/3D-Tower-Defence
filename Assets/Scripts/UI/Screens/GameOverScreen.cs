@@ -1,3 +1,4 @@
+using TowerDefense.Core;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -18,15 +19,15 @@ namespace TowerDefense.UI
 
             if (_restartButton != null)
             {
-                _restartButton.onClick.AddListener(RestartGame);
+                _restartButton.onClick.AddListener(BackToMainMenu);
             }
             
             Close();
         }
 
-        private void RestartGame()
+        private void BackToMainMenu()
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+            SceneManager.LoadScene(Constants.FirstSceneIndex);
         }
     }
 }

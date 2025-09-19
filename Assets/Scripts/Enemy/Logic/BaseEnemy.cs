@@ -1,4 +1,5 @@
 using System.Collections;
+using TowerDefense.Core;
 using TowerDefense.Data;
 using TowerDefense.Interfaces;
 using TowerDefense.Signals;
@@ -35,7 +36,7 @@ namespace TowerDefense.Enemies
         private bool _isDying = false; 
 
         [Inject]
-        public void Construct(SignalBus signalBus, [Inject(Id = "PathTarget")] Transform target)
+        public void Construct(SignalBus signalBus, [Inject(Id = Constants.PathTargetKey)] Transform target)
         {
             _signalBus = signalBus;
             _target = target;

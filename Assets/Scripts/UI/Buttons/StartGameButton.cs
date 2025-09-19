@@ -1,4 +1,4 @@
-using System;
+using TowerDefense.Core;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -17,7 +17,7 @@ namespace TowerDefense.UI
 
         private void StartGame()
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            SceneManager.LoadScene(Constants.SecondSceneIndex);
         }
     }
 }

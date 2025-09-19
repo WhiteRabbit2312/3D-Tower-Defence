@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TowerDefense.Core;
 using TowerDefense.Data;
 using TowerDefense.Enemies;
 using TowerDefense.Interfaces;
@@ -44,7 +45,7 @@ namespace TowerDefense.Managers
 
         [Inject]
         public void Construct(
-            [Inject(Id = "SpawnPoint")] Transform spawnPoint, 
+            [Inject(Id = Constants.SpawnPointKey)] Transform spawnPoint, 
             IEnemyFactory enemyFactory,
             EnemyManager enemyManager,
             SignalBus signalBus)

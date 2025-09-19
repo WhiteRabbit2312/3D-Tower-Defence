@@ -1,3 +1,4 @@
+using TowerDefense.Core;
 using UnityEngine;
 using Zenject;
 using TowerDefense.Managers;
@@ -56,8 +57,8 @@ namespace TowerDefense.Installers
             Container.Bind<ITowerFactory>().To<TowerFactory>().AsSingle();
             Container.Bind<IProjectileFactory>().To<ProjectileFactory>().AsSingle();
 
-            Container.Bind<Transform>().WithId("SpawnPoint").FromInstance(_spawnPoint);
-            Container.Bind<Transform>().WithId("PathTarget").FromInstance(_pathTarget);
+            Container.Bind<Transform>().WithId(Constants.SpawnPointKey).FromInstance(_spawnPoint);
+            Container.Bind<Transform>().WithId(Constants.PathTargetKey).FromInstance(_pathTarget);
         }
     }
 }
