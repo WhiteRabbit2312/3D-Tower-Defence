@@ -54,6 +54,6 @@ MonoBehaviour:
   - EnemyData: {fileID: 11400000, guid: df96c8fab8b1ead43b7e133d53dd9f1e, type: 2}
     SpawnChance: 60
   - EnemyData: {fileID: 11400000, guid: 69d3afb2271765e41aae2e221d5748ab, type: 2}
-    SpawnChance: 25
+    SpawnChance: 10
   - EnemyData: {fileID: 11400000, guid: 1e4be379d93b58c4fbb320108974e494, type: 2}
-    SpawnChance: 15
+    SpawnChance: 30

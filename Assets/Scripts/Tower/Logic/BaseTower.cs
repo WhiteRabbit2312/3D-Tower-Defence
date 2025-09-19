@@ -90,7 +90,7 @@ namespace TowerDefense.Towers
         protected void FindTarget()
         {
             var potentialTargets = EnemyManager.ActiveEnemies
-                .Where(e => Vector3.Distance(transform.position, e.Position) <= CurrentRange)
+                .Where(e => e.IsAlive && Vector3.Distance(transform.position, e.Position) <= CurrentRange)
                 .ToList();
 
             if (!potentialTargets.Any())
