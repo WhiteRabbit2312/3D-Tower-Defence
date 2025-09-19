@@ -15,7 +15,7 @@ MonoBehaviour:
   TowerPrefab: {fileID: 5735905219706733880, guid: 81b0f69fc5b2d47499a1bd5e463786ae, type: 3}
   BuildCost: 125
   _baseDamage: 10
-  _baseRange: 5
+  _baseRange: 9
   _baseFireRate: 1.5
   _baseSlowMultiplier: 0.7
   _baseSlowDuration: 2

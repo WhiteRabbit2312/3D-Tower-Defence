@@ -10,12 +10,12 @@ namespace TowerDefense.Enemies
 {
     [RequireComponent(typeof(Collider))]
     [RequireComponent(typeof(NavMeshAgent))]
-    public abstract class BaseEnemy : MonoBehaviour, ITargetable, IEffectable // Now implements IEffectable
+    public abstract class BaseEnemy : MonoBehaviour, ITargetable, IEffectable 
     {
         public int CurrencyValue { get; private set; }
         public float CurrentHealth => _currentHealth;
         public Vector3 Position => transform.position;
-        public bool IsAlive => _currentHealth > 0;
+        public bool IsAlive => _currentHealth > 0 && !_isDying;
 
         protected float _maxHealth;
         protected float _currentHealth;
@@ -26,7 +26,7 @@ namespace TowerDefense.Enemies
         private Transform _target;
         
         private Coroutine _speedModifierCoroutine;
-        private bool _isDying = false; // The new flag to prevent multiple deaths
+        private bool _isDying = false; 
 
         [Inject]
         public void Construct(SignalBus signalBus, [Inject(Id = "PathTarget")] Transform target)
@@ -42,7 +42,6 @@ namespace TowerDefense.Enemies
 
         protected virtual void Update()
         {
-            // Check if agent is valid before accessing properties to prevent errors on death
             if (IsAlive && _agent.isOnNavMesh && _agent.hasPath && !_agent.pathPending && _agent.remainingDistance <= _agent.stoppingDistance)
             {
                 ReachEnd();
@@ -71,8 +70,7 @@ namespace TowerDefense.Enemies
 
         public virtual void TakeDamage(float amount)
         {
-            // This check prevents taking damage after death has been initiated
-            if (_isDying || !IsAlive) return;
+            if (!IsAlive) return;
 
             _currentHealth -= amount;
             if (_currentHealth <= 0)
@@ -83,7 +81,7 @@ namespace TowerDefense.Enemies
         
         public void ApplySpeedModifier(float multiplier, float duration)
         {
-            if (!IsAlive) return; // Don't apply effects to dead enemies
+            if (!IsAlive) return;
             
             if (_speedModifierCoroutine != null)
             {
@@ -97,7 +95,6 @@ namespace TowerDefense.Enemies
             float originalSpeed = _enemyData.BaseMoveSpeed;
             _agent.speed = originalSpeed * multiplier;
             yield return new WaitForSeconds(duration);
-            // Check if agent is still valid before resetting speed
             if (_agent.isOnNavMesh) 
             {
                 _agent.speed = originalSpeed;
@@ -107,22 +104,18 @@ namespace TowerDefense.Enemies
         
         protected virtual void Die()
         {
-            // Use the flag to ensure this logic runs only once
             if (_isDying) return;
-            _isDying = true; // Set the flag immediately
-
-            // Disable the agent to stop movement and prevent errors
-            _agent.enabled = false;
+            _isDying = true;
+            
+            if(_agent.isOnNavMesh) _agent.enabled = false;
             
             _signalBus.Fire(new EnemyDiedSignal(this));
-            
-            // It's slightly safer to destroy with a small delay to ensure all signals are processed
-            Destroy(gameObject, 0.1f); 
+            Destroy(gameObject);
         }
 
         private void ReachEnd()
         {
-            if (_isDying) return; // Prevent reaching end if already dying
+            if (_isDying) return;
             _isDying = true;
 
             _signalBus.Fire(new EnemyReachedEndSignal(this));

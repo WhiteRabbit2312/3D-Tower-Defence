@@ -253,7 +253,7 @@ MonoBehaviour:
   TurretHead: {fileID: 636643747887296851}
   MuzzlePoint: {fileID: 8387551233907290558}
   ProjectileSpeed: 50
-  _projectilePrefab: {fileID: 8448576071625396945, guid: 4e5446c652eb3d54998f64e563990635, type: 3}
+  _projectilePrefab: {fileID: 8938728339922867192, guid: 4e5446c652eb3d54998f64e563990635, type: 3}
 --- !u!1 &8255275450135198299
 GameObject:
   m_ObjectHideFlags: 0
