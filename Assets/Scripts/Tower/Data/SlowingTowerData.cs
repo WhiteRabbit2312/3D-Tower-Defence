@@ -11,20 +11,25 @@ namespace TowerDefense.Data
     public class SlowingTowerData : TowerData
     {
         [Header("Base Stats")]
-        [SerializeField] private float _baseDamage = 5f; // Now has base damage
+        [SerializeField] private float _baseDamage = 10f;
         [SerializeField] private float _baseRange = 12f;
         [SerializeField] private float _baseFireRate = 1.5f;
-        [SerializeField, Range(0f, 1f)] private float _baseSlowMultiplier = 0.7f; // 30% slow
+        [SerializeField, Range(0.1f, 1f)] private float _baseSlowMultiplier = 0.7f; // e.g., 0.7 means 30% slow
         [SerializeField] private float _baseSlowDuration = 2f;
 
-        [Header("Infinite Upgrade Scaling")]
-        [SerializeField] private int _baseUpgradeCost = 75;
+        [Header("Upgrade Scaling")]
+        [SerializeField] private int _baseUpgradeCost = 100;
         [SerializeField] private float _costGrowthFactor = 1.3f;
-        [SerializeField] private float _damageIncreasePerLevel = 2f; // Damage now scales
-        [Tooltip("The strongest the slow can be (e.g., 0.2 for 80% slow max).")]
-        [SerializeField, Range(0f, 1f)] private float _maxSlowMultiplier = 0.2f;
-        [Tooltip("How much the slow effect improves per level (closer to 0).")]
-        [SerializeField] private float _slowEffectIncreasePerLevel = 0.02f;
+
+        [Header("Damage Upgrade (Infinite)")]
+        [SerializeField] private float _damageIncreasePerLevel = 5f;
+
+        [Header("Slow Effect Upgrade (Limited)")]
+        [Tooltip("The strongest the slow can become (e.g., 0.3 for a max of 70% slow).")]
+        [SerializeField, Range(0.1f, 1f)] private float _maxSlowMultiplier = 0.3f;
+        [Tooltip("How much the slow multiplier decreases each level (getting stronger).")]
+        [SerializeField] private float _slowEffectIncreasePerLevel = 0.05f;
+
 
         // --- Method Implementations ---
 
@@ -32,33 +37,36 @@ namespace TowerDefense.Data
         {
             return (int)(_baseUpgradeCost * Mathf.Pow(_costGrowthFactor, toLevel - 1));
         }
-        
-        // This tower now deals damage.
+
         public override float GetDamage(int level)
         {
+            // Damage grows infinitely
             return _baseDamage + (_damageIncreasePerLevel * level);
         }
 
-        // Range does not scale for this tower type according to requirements.
         public override float GetRange(int level)
         {
+            // For simplicity, range is constant for this tower.
             return _baseRange;
         }
 
         public override float GetFireRate(int level)
         {
+            // For simplicity, fire rate is constant.
             return _baseFireRate;
         }
 
         public override float GetSlowMultiplier(int level)
         {
-            // The slow multiplier decreases (gets stronger) but is capped by _maxSlowMultiplier.
-            return Mathf.Max(_maxSlowMultiplier, _baseSlowMultiplier - (_slowEffectIncreasePerLevel * level));
+            // The slow multiplier decreases (gets stronger) with each level, but is capped by _maxSlowMultiplier.
+            float potentialSlow = _baseSlowMultiplier - (_slowEffectIncreasePerLevel * level);
+            return Mathf.Max(_maxSlowMultiplier, potentialSlow);
         }
 
         public override float GetSlowDuration(int level)
         {
-            return _baseSlowDuration; // Duration does not scale
+            // For simplicity, duration is constant.
+            return _baseSlowDuration;
         }
     }
 }

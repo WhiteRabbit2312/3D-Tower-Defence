@@ -13,13 +13,14 @@ MonoBehaviour:
   m_Name: SlowingTowerData
   m_EditorClassIdentifier: 
   TowerPrefab: {fileID: 5735905219706733880, guid: 81b0f69fc5b2d47499a1bd5e463786ae, type: 3}
-  BuildCost: 20
-  _baseRange: 100
+  BuildCost: 125
+  _baseDamage: 10
+  _baseRange: 5
   _baseFireRate: 1.5
   _baseSlowMultiplier: 0.7
   _baseSlowDuration: 2
-  _baseUpgradeCost: 75
+  _baseUpgradeCost: 100
   _costGrowthFactor: 1.3
-  _rangeIncreasePerLevel: 1.5
-  _slowEffectIncreasePerLevel: 0.02
-  _slowDurationIncreasePerLevel: 0.1
+  _damageIncreasePerLevel: 5
+  _maxSlowMultiplier: 1
+  _slowEffectIncreasePerLevel: 0.05

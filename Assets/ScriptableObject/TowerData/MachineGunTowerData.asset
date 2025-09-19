@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: MachineGunTowerData
   m_EditorClassIdentifier: 
   TowerPrefab: {fileID: 3493675867410704094, guid: 9a5ff9bed88853648bf6c02598d674c8, type: 3}
-  BuildCost: 10
-  _baseDamage: 100
-  _baseRange: 15
+  BuildCost: 100
+  _baseDamage: 25
+  _baseRange: 9
   _baseFireRate: 1
-  _baseUpgradeCost: 50
-  _costGrowthFactor: 1.2
-  _damageIncreasePerLevel: 5
-  _rangeIncreasePerLevel: 1
-  _fireRateDecreasePerLevel: 0.05
+  _baseUpgradeCost: 60
+  _costGrowthFactor: 1.3
+  _damageIncreasePerLevel: 15
+  _maxRangeLevel: 6
+  _rangeIncreasePerLevel: 2

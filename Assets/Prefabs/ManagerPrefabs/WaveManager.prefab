@@ -45,10 +45,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _initialEnemyCount: 10
-  _enemyCountMultiplier: 1.2
-  _healthMultiplier: 1.15
-  _initialDelay: 3
-  _timeBetweenWaves: 7
+  _enemyCountMultiplier: 1.4
+  _healthMultiplier: 1.5
+  _initialDelay: 2
+  _timeBetweenWaves: 4
   _timeBetweenEnemies: 2
   _spawnableEnemies:
   - EnemyData: {fileID: 11400000, guid: df96c8fab8b1ead43b7e133d53dd9f1e, type: 2}

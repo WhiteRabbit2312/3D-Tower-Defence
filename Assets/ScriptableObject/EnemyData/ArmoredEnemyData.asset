@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: ArmoredEnemyData
   m_EditorClassIdentifier: 
   EnemyPrefab: {fileID: 8501888131368643638, guid: 19ed4c80ca268cc4bbe13a152abb95c8, type: 3}
-  BaseHealth: 200
+  BaseHealth: 150
   BaseMoveSpeed: 2.5
-  CurrencyValue: 12
+  CurrencyValue: 25
