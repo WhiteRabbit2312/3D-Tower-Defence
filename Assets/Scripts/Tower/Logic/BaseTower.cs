@@ -13,7 +13,6 @@ namespace TowerDefense.Towers
     /// <summary>
     /// Abstract base class for all tower types.
     /// Handles target acquisition and firing logic.
-    /// Uses the Strategy pattern for targeting.
     /// </summary>
     public abstract class BaseTower : MonoBehaviour
     {

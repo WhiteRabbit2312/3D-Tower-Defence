@@ -19,8 +19,6 @@ namespace TowerDefense.Enemies
         public override void TakeDamage(float amount)
         {
             float damageToTake = amount * _damageMultiplier;
-            
-            // Call the base method with the modified damage value.
             base.TakeDamage(damageToTake);
         }
     }

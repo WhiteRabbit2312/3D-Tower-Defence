@@ -5,11 +5,6 @@ using System.Linq;
 
 namespace TowerDefense.Towers.Targeting
 {
-    /// <summary>
-    /// A concrete implementation of the targeting strategy.
-    /// Now highly optimized. It gets a reference to the EnemyManager and
-    /// searches a small, managed list of enemies instead of the entire scene.
-    /// </summary>
     public class FindClosestTargetStrategy : ITargetingStrategy
     {
         private readonly EnemyManager _enemyManager;

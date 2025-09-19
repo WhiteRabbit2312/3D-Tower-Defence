@@ -66,10 +66,6 @@ namespace TowerDefense.Enemies
             {
                 _agent.SetDestination(_target.position);
             }
-            else
-            {
-                Debug.LogError("Path Target is null for enemy!", this);
-            }
 
             _signalBus.Fire(new EnemySpawnedSignal(this));
         }

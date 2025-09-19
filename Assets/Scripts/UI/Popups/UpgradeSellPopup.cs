@@ -12,7 +12,7 @@ namespace TowerDefense.UI
     /// Manages the UI panel that appears when a built tower is clicked.
     /// Inherits from UIPopup to be part of the UI system.
     /// </summary>
-    public class UpgradeSellPopup : UIPopup // Inherit from your UIPopup
+    public class UpgradeSellPopup : UIPopup
     {
         [Header("Buttons")]
         [SerializeField] private Button _upgradeButton;

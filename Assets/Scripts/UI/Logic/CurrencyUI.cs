@@ -1,4 +1,4 @@
-using TMPro; // Use TextMeshPro for modern UI text
+using TMPro;
 using TowerDefense.Managers;
 using UnityEngine;
 using Zenject;

@@ -8,8 +8,6 @@ namespace TowerDefense.Factories
 {
     /// <summary>
     /// Concrete implementation of the IEnemyFactory.
-    /// Uses Zenject's DiContainer to instantiate prefabs, which automatically handles
-    /// dependency injection for the created enemies.
     /// </summary>
     public class EnemyFactory : IEnemyFactory
     {

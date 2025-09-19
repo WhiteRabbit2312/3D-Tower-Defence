@@ -7,7 +7,7 @@ namespace TowerDefense.Data
     {
         public EnemyData EnemyData;
 
-        [Tooltip("The chance for this enemy to be picked for spawning (e.g., 50 for 50%).")] [Range(0f, 100f)]
+        [Tooltip("The chance for this enemy to be picked for spawning.")] [Range(0f, 100f)]
         public float SpawnChance;
     }
 }

@@ -4,7 +4,6 @@ namespace TowerDefense.Data
 {
     /// <summary>
     /// A ScriptableObject to hold the base stats for a type of enemy.
-    /// This allows for easy creation and balancing of new enemy types without changing code.
     /// </summary>
     [CreateAssetMenu(fileName = "NewEnemyData", menuName = "Tower Defense/Enemy Data")]
     public class EnemyData : ScriptableObject

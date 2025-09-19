@@ -1,9 +1,4 @@
-using TowerDefense.Data;
-using TowerDefense.Factories;
-using TowerDefense.Interfaces;
-using TowerDefense.Managers;
 using UnityEngine;
-using Zenject;
 
 namespace TowerDefense.Towers
 {

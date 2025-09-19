@@ -73,7 +73,6 @@ namespace TowerDefense.Managers
             
             if (_enemiesRemainingInWave <= 0)
             {
-                // Fire a signal so other systems (like WaveManager) know the wave is cleared.
                 _signalBus.Fire(new WaveClearedSignal());
             }
         }

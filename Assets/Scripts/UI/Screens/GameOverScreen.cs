@@ -6,7 +6,6 @@ namespace TowerDefense.UI
 {
     /// <summary>
     /// A UI screen that is shown when the player is defeated.
-    /// Inherits from UIScreen to be managed by the UIManager.
     /// </summary>
     public class GameOverScreen : UIScreen
     {

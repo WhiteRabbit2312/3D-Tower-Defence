@@ -37,11 +37,7 @@ namespace TowerDefense.Towers.Projectiles
                 OnHitTarget();
             }
         }
-
-        /// <summary>
-        /// This method is called when the projectile reaches its target.
-        /// Subclasses must implement this to define the on-hit effect (damage, slow, etc.).
-        /// </summary>
+        
         protected abstract void OnHitTarget();
     }
 }

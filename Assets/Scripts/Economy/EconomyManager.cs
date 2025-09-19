@@ -8,7 +8,7 @@ namespace TowerDefense.Managers
 {
     /// <summary>
     /// Manages the player's currency.
-    /// Listens for signals to add currency (e.g., when an enemy dies).
+    /// Listens for signals to add currency.
     /// Provides methods for spending currency and an event for UI to listen to.
     /// </summary>
     public class EconomyManager : MonoBehaviour

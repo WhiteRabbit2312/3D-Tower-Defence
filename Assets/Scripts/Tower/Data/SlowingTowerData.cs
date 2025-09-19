@@ -25,9 +25,9 @@ namespace TowerDefense.Data
         [SerializeField] private float _damageIncreasePerLevel = 5f;
 
         [Header("Slow Effect Upgrade (Limited)")]
-        [Tooltip("The strongest the slow can become (e.g., 0.3 for a max of 70% slow).")]
+        [Tooltip("The strongest the slow can become.")]
         [SerializeField, Range(0.1f, 1f)] private float _maxSlowMultiplier = 0.3f;
-        [Tooltip("How much the slow multiplier decreases each level (getting stronger).")]
+        [Tooltip("How much the slow multiplier decreases each level.")]
         [SerializeField] private float _slowEffectIncreasePerLevel = 0.05f;
 
         public override int GetUpgradeCost(int toLevel)

@@ -8,8 +8,6 @@ namespace TowerDefense.Factories
 {
     /// <summary>
     /// A factory for creating towers.
-    /// It uses Zenject's DiContainer to properly instantiate tower prefabs
-    /// and resolve all their dependencies.
     /// </summary>
     public class TowerFactory : ITowerFactory
     {
