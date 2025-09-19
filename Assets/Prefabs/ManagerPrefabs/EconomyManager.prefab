@@ -44,4 +44,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0226d651a2d09d241b9defe3cd9db7cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _startingCurrency: 200
+  _startingCurrency: 150

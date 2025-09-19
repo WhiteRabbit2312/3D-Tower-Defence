@@ -90,7 +90,7 @@ namespace TowerDefense.Towers
         protected void FindTarget()
         {
             var potentialTargets = EnemyManager.ActiveEnemies
-                .Where(e => e.IsAlive && Vector3.Distance(transform.position, e.Position) <= CurrentRange)
+                .Where(e => e != null && e.IsAlive && Vector3.Distance(transform.position, e.Position) <= CurrentRange)
                 .ToList();
 
             if (!potentialTargets.Any())
@@ -126,8 +126,16 @@ namespace TowerDefense.Towers
 
         protected bool IsTargetValid()
         {
-            if (CurrentTarget == null || !CurrentTarget.IsAlive) return false;
-            if (Vector3.Distance(transform.position, CurrentTarget.Position) > CurrentRange) return false;
+            if (CurrentTarget == null || (CurrentTarget as UnityEngine.Object) == null || !CurrentTarget.IsAlive)
+            {
+                return false;
+            }
+
+            if (Vector3.Distance(transform.position, CurrentTarget.Position) > CurrentRange)
+            {
+                return false;
+            }
+            
             return true;
         }
         

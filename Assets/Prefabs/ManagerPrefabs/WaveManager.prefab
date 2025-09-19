@@ -46,14 +46,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _initialEnemyCount: 10
   _enemyCountMultiplier: 1.4
-  _healthMultiplier: 1.5
+  _healthMultiplier: 1.6
   _initialDelay: 2
   _timeBetweenWaves: 4
-  _timeBetweenEnemies: 2
+  _timeBetweenEnemies: 1.5
   _spawnableEnemies:
   - EnemyData: {fileID: 11400000, guid: df96c8fab8b1ead43b7e133d53dd9f1e, type: 2}
     SpawnChance: 60
   - EnemyData: {fileID: 11400000, guid: 69d3afb2271765e41aae2e221d5748ab, type: 2}
-    SpawnChance: 10
+    SpawnChance: 15
   - EnemyData: {fileID: 11400000, guid: 1e4be379d93b58c4fbb320108974e494, type: 2}
-    SpawnChance: 30
+    SpawnChance: 25

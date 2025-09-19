@@ -22,7 +22,7 @@ namespace TowerDefense.Towers.Projectiles
 
         protected virtual void Update()
         {
-            if (Target == null || !Target.IsAlive)
+            if (Target == null || (Target as UnityEngine.Object) == null || !Target.IsAlive)
             {
                 Destroy(gameObject);
                 return;
