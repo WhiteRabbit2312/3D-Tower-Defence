@@ -7,7 +7,9 @@ using Zenject;
 namespace TowerDefense.Managers
 {
     /// <summary>
-    /// Subscribes to the EnemyDiedSignal to grant currency.
+    /// Manages the player's currency.
+    /// Listens for signals to add currency (e.g., when an enemy dies).
+    /// Provides methods for spending currency and an event for UI to listen to.
     /// </summary>
     public class EconomyManager : MonoBehaviour
     {
@@ -46,7 +48,6 @@ namespace TowerDefense.Managers
 
         public void AddCurrency(int amount)
         {
-            Debug.LogError("AddCurrency");
             CurrentCurrency += amount;
             OnCurrencyChanged?.Invoke(CurrentCurrency);
         }
@@ -57,8 +58,6 @@ namespace TowerDefense.Managers
             {
                 CurrentCurrency -= amount;
                 OnCurrencyChanged?.Invoke(CurrentCurrency);
-                Debug.Log($"Spent {amount}. Current currency: {CurrentCurrency}");
-                // Fire a signal here to update the UI
                 return true;
             }
             return false;

@@ -19,8 +19,6 @@ namespace TowerDefense.Towers.Projectiles
 
         protected override void OnHitTarget()
         {
-            // To deal damage, we need to access the TakeDamage method,
-            // which is on the concrete BaseEnemy class.
             if (Target is BaseEnemy enemyTarget)
             {
                 enemyTarget.TakeDamage(_damage);

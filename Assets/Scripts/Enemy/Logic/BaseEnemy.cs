@@ -8,6 +8,12 @@ using Zenject;
 
 namespace TowerDefense.Enemies
 {
+    /// <summary>
+    /// Abstract base class for all enemy types.
+    /// Manages core enemy logic including health, movement via NavMeshAgent,
+    /// taking damage, and applying status effects.
+    /// It communicates with other game systems via signals.
+    /// </summary>
     [RequireComponent(typeof(Collider))]
     [RequireComponent(typeof(NavMeshAgent))]
     public abstract class BaseEnemy : MonoBehaviour, ITargetable, IEffectable 
@@ -90,6 +96,7 @@ namespace TowerDefense.Enemies
             _speedModifierCoroutine = StartCoroutine(SpeedModifierRoutine(multiplier, duration));
         }
 
+        // A coroutine to temporarily change the enemy's speed.
         private IEnumerator SpeedModifierRoutine(float multiplier, float duration)
         {
             float originalSpeed = _enemyData.BaseMoveSpeed;
@@ -122,6 +129,7 @@ namespace TowerDefense.Enemies
             Destroy(gameObject);
         }
 
+        // Required by the ITargetable interface for towers to get a reference to the transform.
         public Transform GetTransform() => transform;
     }
 }

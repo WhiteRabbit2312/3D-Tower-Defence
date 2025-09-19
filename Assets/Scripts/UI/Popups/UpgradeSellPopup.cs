@@ -32,7 +32,6 @@ namespace TowerDefense.UI
         private BaseTower _selectedTower;
         private EconomyManager _economyManager;
         
-        // A color to indicate that a stat will improve.
         private readonly Color _upgradeColor = Color.green;
 
         [Inject]
@@ -80,7 +79,6 @@ namespace TowerDefense.UI
             _upgradeCostText.text = $"Upgrade (${upgradeCost})";
             _upgradeButton.interactable = _economyManager.CurrentCurrency >= upgradeCost;
 
-            // Update damage text (common for both towers)
             UpdateStatText(_damageText, "Damage", towerData.GetDamage(currentLevel), towerData.GetDamage(nextLevel));
             
             if (_priorityButton != null)
@@ -102,7 +100,6 @@ namespace TowerDefense.UI
             }
             else
             {
-                // If it's another tower type in the future without a special stat, hide the text field.
                 if (_specialStatText != null)
                 {
                     _specialStatText.gameObject.SetActive(false);

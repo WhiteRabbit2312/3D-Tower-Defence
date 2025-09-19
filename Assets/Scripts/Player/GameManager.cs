@@ -40,8 +40,6 @@ namespace TowerDefense.Managers
 
         private void OnPlayerDefeated()
         {
-            Debug.LogError("GAME OVER - Starting cleanup sequence.");
-
             _waveManager.StopSpawning();
             _enemyManager.DestroyAllEnemies();
             _gameOverScreen.Open();

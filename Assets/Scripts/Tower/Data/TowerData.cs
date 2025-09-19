@@ -16,7 +16,6 @@ namespace TowerDefense.Data
         [Tooltip("Cost to build the tower at level 1.")]
         public int BuildCost = 100;
 
-        // Abstract methods to get stats for a given level, now calculated procedurally.
         public abstract int GetUpgradeCost(int toLevel);
         public abstract float GetDamage(int level);
         public abstract float GetRange(int level);

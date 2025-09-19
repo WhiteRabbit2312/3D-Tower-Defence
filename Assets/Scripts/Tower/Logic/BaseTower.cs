@@ -82,9 +82,7 @@ namespace TowerDefense.Towers
             int nextPriority = ((int)CurrentPriority + 1) % System.Enum.GetValues(typeof(TargetingPriority)).Length;
             CurrentPriority = (TargetingPriority)nextPriority;
             
-            // Force the tower to find a new target based on the new priority
             FindTarget();
-            Debug.Log($"Tower targeting priority switched to: {CurrentPriority}");
         }
         
         protected void FindTarget()
@@ -149,10 +147,6 @@ namespace TowerDefense.Towers
             if (EconomyManager.TrySpendCurrency(upgradeCost))
             {
                 ApplyUpgrade(nextLevel);
-            }
-            else
-            {
-                Debug.Log("Not enough currency to upgrade.");
             }
         }
         

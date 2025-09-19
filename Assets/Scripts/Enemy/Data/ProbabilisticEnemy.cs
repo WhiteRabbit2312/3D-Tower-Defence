@@ -1,4 +1,3 @@
-using TowerDefense.Data;
 using UnityEngine;
 
 namespace TowerDefense.Data

@@ -14,7 +14,7 @@ namespace TowerDefense.Data
         [SerializeField] private float _baseDamage = 10f;
         [SerializeField] private float _baseRange = 12f;
         [SerializeField] private float _baseFireRate = 1.5f;
-        [SerializeField, Range(0.1f, 1f)] private float _baseSlowMultiplier = 0.7f; // e.g., 0.7 means 30% slow
+        [SerializeField, Range(0.1f, 1f)] private float _baseSlowMultiplier = 0.7f;
         [SerializeField] private float _baseSlowDuration = 2f;
 
         [Header("Upgrade Scaling")]
@@ -30,9 +30,6 @@ namespace TowerDefense.Data
         [Tooltip("How much the slow multiplier decreases each level (getting stronger).")]
         [SerializeField] private float _slowEffectIncreasePerLevel = 0.05f;
 
-
-        // --- Method Implementations ---
-
         public override int GetUpgradeCost(int toLevel)
         {
             return (int)(_baseUpgradeCost * Mathf.Pow(_costGrowthFactor, toLevel - 1));
@@ -40,32 +37,27 @@ namespace TowerDefense.Data
 
         public override float GetDamage(int level)
         {
-            // Damage grows infinitely
             return _baseDamage + (_damageIncreasePerLevel * level);
         }
 
         public override float GetRange(int level)
         {
-            // For simplicity, range is constant for this tower.
             return _baseRange;
         }
 
         public override float GetFireRate(int level)
         {
-            // For simplicity, fire rate is constant.
             return _baseFireRate;
         }
 
         public override float GetSlowMultiplier(int level)
         {
-            // The slow multiplier decreases (gets stronger) with each level, but is capped by _maxSlowMultiplier.
             float potentialSlow = _baseSlowMultiplier - (_slowEffectIncreasePerLevel * level);
             return Mathf.Max(_maxSlowMultiplier, potentialSlow);
         }
 
         public override float GetSlowDuration(int level)
         {
-            // For simplicity, duration is constant.
             return _baseSlowDuration;
         }
     }

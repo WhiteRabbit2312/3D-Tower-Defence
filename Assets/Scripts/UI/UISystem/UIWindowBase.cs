@@ -4,6 +4,11 @@ using Zenject;
 
 namespace TowerDefense.UI
 {
+    /// <summary>
+    /// An abstract base class for all UI windows in the game.
+    /// It provides the core functionality for opening and closing a UI panel
+    /// using a CanvasGroup, and handles the injection of the UIManager.
+    /// </summary>
     public abstract class UIWindowBase : MonoBehaviour
     {
         [SerializeField] protected CanvasGroup Window;
@@ -28,8 +33,6 @@ namespace TowerDefense.UI
 
         public virtual void Open()
         {
-            Debug.LogError("Open");
-
             Window.alpha = 1f;
             Window.interactable = true;
             Window.blocksRaycasts = true;

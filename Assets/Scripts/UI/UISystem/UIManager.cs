@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace TowerDefense.UI
 {
+    /// <summary>
+    /// A central manager for controlling the state of UI screens and popups.
+    /// </summary>
     public class UIManager
     {
         private UIScreen _currentScreen;

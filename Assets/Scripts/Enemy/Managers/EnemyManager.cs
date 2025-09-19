@@ -29,7 +29,7 @@ namespace TowerDefense.Managers
         {
             _signalBus.Subscribe<EnemySpawnedSignal>(HandleEnemySpawn);
             _signalBus.Subscribe<EnemyDiedSignal>(HandleEnemyDeath);
-            _signalBus.Subscribe<EnemyReachedEndSignal>(HandleEnemyReachedEnd); // Handle enemies that reach the end
+            _signalBus.Subscribe<EnemyReachedEndSignal>(HandleEnemyReachedEnd);
         }
 
         private void OnDisable()
@@ -59,7 +59,6 @@ namespace TowerDefense.Managers
 
         private void HandleEnemyReachedEnd(EnemyReachedEndSignal signal)
         {
-            // An enemy that reaches the end should also be removed from the active list
             RemoveActiveEnemy(signal.Enemy);
         }
         
@@ -72,19 +71,15 @@ namespace TowerDefense.Managers
             
             _enemiesRemainingInWave--;
             
-            // Check if this was the last enemy of the wave
             if (_enemiesRemainingInWave <= 0)
             {
                 // Fire a signal so other systems (like WaveManager) know the wave is cleared.
                 _signalBus.Fire(new WaveClearedSignal());
-                Debug.Log("Wave Cleared!");
             }
         }
         
         public void DestroyAllEnemies()
         {
-            // We iterate over a copy of the list because the original list will be modified
-            // inside the loop when enemies are destroyed and fire their death signals.
             foreach (var enemy in ActiveEnemies.ToList())
             {
                 if (enemy != null && enemy.GetTransform() != null)
@@ -92,7 +87,6 @@ namespace TowerDefense.Managers
                     Destroy(enemy.GetTransform().gameObject);
                 }
             }
-            // Clear the list to ensure a clean state.
             ActiveEnemies.Clear();
         }
     }

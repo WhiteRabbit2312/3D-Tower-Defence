@@ -7,8 +7,6 @@ namespace TowerDefense.Interfaces
     public interface IEffectable
     {
         void ApplySpeedModifier(float multiplier, float duration);
-        
-        // We add TakeDamage here to decouple projectiles from concrete enemy classes.
         void TakeDamage(float amount);
     }
 }

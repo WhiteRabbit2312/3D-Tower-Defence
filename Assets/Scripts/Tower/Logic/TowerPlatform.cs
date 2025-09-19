@@ -15,23 +15,9 @@ namespace TowerDefense.Towers
         public BaseTower PlacedTower { get; private set; }
         public bool IsOccupied => PlacedTower != null;
         
-        /// <summary>
-        /// Assigns a tower to this platform, marking it as occupied.
-        /// </summary>
         public void SetPlacedTower(BaseTower tower)
         {
             PlacedTower = tower;
-        }
-
-        /// <summary>
-        /// Called by BuildManager when the player clicks on an occupied platform.
-        /// </summary>
-        public void TryUpgradeTower()
-        {
-            if (IsOccupied)
-            {
-                PlacedTower.Upgrade();
-            }
         }
         
         public void ClearPlacedTower()

@@ -12,9 +12,6 @@ namespace TowerDefense.Towers.Projectiles
         private float _slowMultiplier;
         private float _slowDuration;
 
-        /// <summary>
-        ///- Initializes the projectile with all its necessary stats.
-        /// </summary>
         public void Initialize(ITargetable target, float speed, float damage, float slowMultiplier, float slowDuration)
         {
             base.Initialize(target, speed);
@@ -23,24 +20,18 @@ namespace TowerDefense.Towers.Projectiles
             _slowDuration = slowDuration;
         }
 
-        /// <summary>
-        ///- Overrides the base hit logic to apply both effects.
-        /// </summary>
         protected override void OnHitTarget()
         {
-            // Deal damage first by casting to BaseEnemy
             if (Target is BaseEnemy enemy)
             {
                 enemy.TakeDamage(_damage);
             }
 
-            // Then apply the slow effect by casting to IEffectable
             if (Target is IEffectable effectable)
             {
                 effectable.ApplySpeedModifier(_slowMultiplier, _slowDuration);
             }
 
-            // Destroy the projectile after applying effects
             Destroy(gameObject);
         }
     }

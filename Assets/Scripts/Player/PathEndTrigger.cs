@@ -27,13 +27,10 @@ namespace TowerDefense.Core
 
         private void OnTriggerEnter(Collider other)
         {
-            Debug.LogError("OnTriggerEnter");
-
             BaseEnemy enemy = other.GetComponent<BaseEnemy>();
 
             if (enemy != null && enemy.IsAlive)
             {
-                Debug.LogError("EnemyReachedEndSignal");
                 _signalBus.Fire(new EnemyReachedEndSignal(enemy));
 
                 Destroy(enemy.gameObject);

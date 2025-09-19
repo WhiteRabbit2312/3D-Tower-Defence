@@ -27,9 +27,6 @@ namespace TowerDefense.Data
         [SerializeField] private int _maxRangeLevel = 5;
         [SerializeField] private float _rangeIncreasePerLevel = 2f;
         
-
-        // --- Method Implementations ---
-
         public override int GetUpgradeCost(int toLevel)
         {
             return (int)(_baseUpgradeCost * Mathf.Pow(_costGrowthFactor, toLevel - 1));
@@ -37,20 +34,17 @@ namespace TowerDefense.Data
 
         public override float GetDamage(int level)
         {
-            // Damage grows infinitely
             return _baseDamage + (_damageIncreasePerLevel * level);
         }
 
         public override float GetRange(int level)
         {
-            // The effective level for range is capped at MaxRangeLevel
             int effectiveLevel = Mathf.Min(level, _maxRangeLevel);
             return _baseRange + (_rangeIncreasePerLevel * effectiveLevel);
         }
 
         public override float GetFireRate(int level)
         {
-            // For simplicity, fire rate is constant in this version.
             return _baseFireRate;
         }
 

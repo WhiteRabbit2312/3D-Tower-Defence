@@ -2,6 +2,10 @@ using UnityEngine;
 
 namespace TowerDefense.UI
 {
+    /// <summary>
+    /// An abstract base class for UI elements that function as "popups".
+    /// This script automatically hooks up its Open and Close buttons to the UIManager.
+    /// </summary>
     public abstract class UIPopup : UIWindowBase
     {
         protected override void Awake()
@@ -14,7 +18,6 @@ namespace TowerDefense.UI
 
             if (CloseButton != null)
             {
-                Debug.LogError("close2");
                 CloseButton.onClick.AddListener(() => UiManager.ClosePopup(this));
             }
         }

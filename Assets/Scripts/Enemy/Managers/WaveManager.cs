@@ -10,12 +10,17 @@ using Zenject;
 
 namespace TowerDefense.Managers
 {
+    /// <summary>
+    /// Manages the procedural generation and spawning of infinite enemy waves.
+    /// It increases the difficulty over time by scaling enemy count and health,
+    /// and spawns different enemy types based on defined probabilities.
+    /// </summary>
     public class WaveManager : MonoBehaviour
     {
         [Header("Wave Progression")]
         [SerializeField] private int _initialEnemyCount = 10;
         [SerializeField] [Range(1.0f, 2.0f)] private float _enemyCountMultiplier = 1.5f;
-        [SerializeField] [Range(1.0f, 2.0f)] private float _healthMultiplier = 1.1f; // 1.1 = +10% health per wave
+        [SerializeField] [Range(1.0f, 2.0f)] private float _healthMultiplier = 1.1f;
 
         [Header("Timing")]
         [SerializeField] private float _initialDelay = 5f;
@@ -72,11 +77,13 @@ namespace TowerDefense.Managers
             StartNextWave();
         }
         
+        /// <summary>
+        /// Public method called by the GameManager to halt all spawning activities.
+        /// </summary>
         public void StopSpawning()
         {
             _isSpawningStopped = true;
             StopAllCoroutines();
-            Debug.Log("Wave spawning has been stopped.");
         }
 
         private void OnWaveCleared()
@@ -97,13 +104,13 @@ namespace TowerDefense.Managers
             StartCoroutine(SpawnWaveCoroutine());
         }
         
+        // The main coroutine that handles the spawning of enemies for a single wave.
         private IEnumerator SpawnWaveCoroutine()
         {
             CurrentWaveNumber++;
             
             _enemyManager.PrepareForWave(_enemiesForNextWave);
-            Debug.Log($"Starting Wave {CurrentWaveNumber} with {_enemiesForNextWave} enemies. Health Multiplier: {_currentHealthMultiplier:F2}");
-            
+           
             for (int i = 0; i < _enemiesForNextWave; i++)
             {
                 if (_isSpawningStopped) yield break;
@@ -120,6 +127,7 @@ namespace TowerDefense.Managers
             _currentHealthMultiplier *= _healthMultiplier;
         }
 
+        // Handles the creation of a single enemy instance.
         private void SpawnEnemy(EnemyData enemyData)
         {
             BaseEnemy newEnemy = _enemyFactory.Create(enemyData, _spawnPoint.position);
@@ -129,11 +137,11 @@ namespace TowerDefense.Managers
             }
         }
 
+        // Selects an enemy to spawn based on the weighted probabilities.
         private EnemyData GetRandomEnemy()
         {
             if (_spawnableEnemies.Count == 0)
             {
-                Debug.LogError("No spawnable enemies defined in WaveManager!");
                 return null;
             }
 

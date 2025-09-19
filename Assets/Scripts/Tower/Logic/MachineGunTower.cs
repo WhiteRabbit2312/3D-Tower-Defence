@@ -17,17 +17,12 @@ namespace TowerDefense.Towers
 
         private IProjectileFactory _projectileFactory;
 
-        // Using a constructor injection for the factory.
         [Inject]
         public void Construct(IProjectileFactory projectileFactory)
         {
             _projectileFactory = projectileFactory;
         }
-        
-        /// <summary>
-        /// Implements the firing logic for this specific tower.
-        /// It creates a damage projectile using the factory.
-        /// </summary>
+
         protected override void Fire()
         {
             if (CurrentTarget == null || MuzzlePoint == null || _projectilePrefab == null) return;

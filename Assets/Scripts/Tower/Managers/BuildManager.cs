@@ -17,15 +17,12 @@ namespace TowerDefense.Managers
         private TowerData _selectedTowerData;
         private BaseTower _towerGhost;
 
-        // --- Dependencies ---
         private ITowerFactory _towerFactory;
         private EconomyManager _economyManager;
         private UpgradeSellPopup _upgradeSellPopup;
         private SignalBus _signalBus;
         private Camera _mainCamera;
-
-        // --- State Cooldown ---
-        // A short cooldown to prevent the upgrade panel from opening in the same frame a tower is built or cancelled.
+        
         private float _platformClickCooldown;
 
         [Inject]
@@ -50,7 +47,6 @@ namespace TowerDefense.Managers
         {
             if (_economyManager.CurrentCurrency < towerData.BuildCost) return;
 
-            //_upgradeSellPanel.Hide(); // As per your provided script
             _selectedTowerData = towerData;
             if (_towerGhost != null) Destroy(_towerGhost.gameObject);
             _towerGhost = Instantiate(_selectedTowerData.TowerPrefab);
@@ -59,7 +55,6 @@ namespace TowerDefense.Managers
 
         private void Update()
         {
-            // Always update the cooldown timer.
             if (_platformClickCooldown > 0)
             {
                 _platformClickCooldown -= Time.deltaTime;
@@ -87,7 +82,6 @@ namespace TowerDefense.Managers
 
         private void HandlePlatformClicks()
         {
-            // We check the cooldown here. If a build/cancel action just happened, we ignore this click.
             if (_platformClickCooldown > 0)
             {
                 return;
@@ -113,9 +107,7 @@ namespace TowerDefense.Managers
                     BaseTower newTower = _towerFactory.CreateTower(_selectedTowerData, platform.transform.position);
                     newTower.Initialize(_selectedTowerData, platform);
                     platform.SetPlacedTower(newTower);
-                    
-                    // --- THIS IS WHERE THE SIGNAL IS FIRED ---
-                    // Announce that a tower has been successfully placed.
+
                     _signalBus.Fire(new TowerPlacedSignal());
 
                     CancelBuildMode();
@@ -132,10 +124,6 @@ namespace TowerDefense.Managers
             if (_towerGhost != null) Destroy(_towerGhost.gameObject);
             _towerGhost = null;
             _selectedTowerData = null;
-
-            //_upgradeSellPanel.Hide(); // As per your provided script
-
-            // We start a short cooldown period. This is much more reliable than a single-frame flag.
             _platformClickCooldown = 0.1f;
         }
 

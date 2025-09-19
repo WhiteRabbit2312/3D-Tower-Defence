@@ -24,11 +24,9 @@ namespace TowerDefense.Factories
         {
             if (enemyData == null || enemyData.EnemyPrefab == null)
             {
-                Debug.LogError("[EnemyFactory] EnemyData or its prefab is null. Cannot create enemy.");
                 return null;
             }
 
-            // Using InstantiatePrefabForComponent ensures that Zenject dependencies on the enemy's scripts are resolved.
             BaseEnemy enemyInstance = _container.InstantiatePrefabForComponent<BaseEnemy>(
                 enemyData.EnemyPrefab, 
                 position, 

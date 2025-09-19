@@ -2,6 +2,10 @@ using UnityEngine;
 
 namespace TowerDefense.UI
 {
+    /// <summary>
+    /// An abstract base class for primary UI screens.
+    /// This script automatically hooks up its Open and Close buttons to the UIManager.
+    /// </summary>
     public abstract class UIScreen : UIWindowBase
     {
         protected override void Awake()
@@ -9,11 +13,6 @@ namespace TowerDefense.UI
             base.Awake();
             if (OpenButton != null)
             {
-                if (UiManager == null)
-                {
-                    Debug.LogError("UiManager is null");
-                }
-                
                 OpenButton.onClick.AddListener(() => UiManager.OpenScreen(this));
             }
 

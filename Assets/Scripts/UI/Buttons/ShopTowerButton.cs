@@ -6,10 +6,6 @@ using Zenject;
 
 namespace TowerDefense.UI
 {
-    /// <summary>
-    /// This script should be placed on a UI Button in your shop.
-    /// It tells the BuildManager which tower the player wants to build.
-    /// </summary>
     [RequireComponent(typeof(Button))]
     public class ShopTowerButton : MonoBehaviour
     {

@@ -49,14 +49,11 @@ namespace TowerDefense.Managers
             CurrentLives--;
             OnLivesChanged?.Invoke(CurrentLives);
 
-            Debug.Log($"Player lost a life! Lives remaining: {CurrentLives}");
-
             if (CurrentLives <= 0)
             {
                 CurrentLives = 0;
                 _isGameOver = true;
                 _signalBus.Fire(new PlayerDefeatedSignal());
-                Debug.Log("Player has been defeated!");
             }
         }
     }

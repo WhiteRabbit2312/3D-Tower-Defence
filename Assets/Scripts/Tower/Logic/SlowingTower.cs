@@ -19,10 +19,6 @@ namespace TowerDefense.Towers
             _projectileFactory = projectileFactory;
         }
 
-        /// <summary>
-        /// Implements the firing logic for this specific tower.
-        /// It creates a projectile that damages and slows, using the factory.
-        /// </summary>
         protected override void Fire()
         {
             if (CurrentTarget == null || MuzzlePoint == null || _projectilePrefab == null) return;
