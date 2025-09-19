@@ -85,7 +85,7 @@ namespace TowerDefense.UI
             
             if (_priorityButton != null)
             {
-                _priorityButton.GetComponentInChildren<TMP_Text>().text = $"Priority:\n{_selectedTower.CurrentPriority}";
+                _priorityButton.GetComponentInChildren<TMP_Text>().text = $"{_selectedTower.CurrentPriority}";
             }
             
             if (towerData is MachineGunTowerData)
