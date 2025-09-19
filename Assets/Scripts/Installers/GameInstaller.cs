@@ -32,8 +32,6 @@ namespace TowerDefense.Installers
 
         public override void InstallBindings()
         {
-            Debug.LogError("InstallBindings");
-            // Install the SignalBus
             SignalBusInstaller.Install(Container);
 
             // Declare all signals

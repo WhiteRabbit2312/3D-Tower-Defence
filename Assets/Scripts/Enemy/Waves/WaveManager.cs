@@ -12,8 +12,6 @@ namespace TowerDefense.Managers
 {
     public class WaveManager : MonoBehaviour
     {
-        private static bool _hasInstanceAwoken = false;
-        private int _instanceId;
         [Header("Wave Progression")]
         [SerializeField] private int _initialEnemyCount = 10;
         [SerializeField] [Range(1.0f, 2.0f)] private float _enemyCountMultiplier = 1.5f;
@@ -52,25 +50,6 @@ namespace TowerDefense.Managers
             _signalBus = signalBus;
         }
         
-        private void Awake()
-        {
-            _instanceId = Random.Range(1000, 9999);
-            Debug.Log($"WaveManager [{_instanceId}] AWAKE on GameObject '{this.gameObject.name}'.");
-
-            // --- THE TRAP ---
-            // If the flag is already true, it means another WaveManager has already run its Awake method.
-            // This MUST be the second, unwanted instance.
-            if (_hasInstanceAwoken)
-            {
-                Debug.LogError($"--- DUPLICATE WaveManager DETECTED! --- Instance [{_instanceId}] on GameObject '{this.gameObject.name}' is the second instance. The editor will now pause. Please delete this GameObject from the scene hierarchy.", this.gameObject);
-                Debug.Break(); // This will pause the Unity Editor.
-                return;
-            }
-
-            // If this is the first instance, set the flag to true.
-            _hasInstanceAwoken = true;
-        }
-
         private void OnEnable()
         {
             _signalBus.Subscribe<WaveClearedSignal>(OnWaveCleared);
