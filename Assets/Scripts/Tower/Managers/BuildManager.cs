@@ -20,7 +20,7 @@ namespace TowerDefense.Managers
         // --- Dependencies ---
         private ITowerFactory _towerFactory;
         private EconomyManager _economyManager;
-        private UpgradeSellPanel _upgradeSellPanel;
+        private UpgradeSellPopup _upgradeSellPopup;
         private SignalBus _signalBus;
         private Camera _mainCamera;
 
@@ -32,12 +32,12 @@ namespace TowerDefense.Managers
         public void Construct(
             ITowerFactory towerFactory,
             EconomyManager economyManager,
-            UpgradeSellPanel upgradeSellPanel,
+            UpgradeSellPopup upgradeSellPopup,
             SignalBus signalBus)
         {
             _towerFactory = towerFactory;
             _economyManager = economyManager;
-            _upgradeSellPanel = upgradeSellPanel;
+            _upgradeSellPopup = upgradeSellPopup;
             _signalBus = signalBus;
         }
 
@@ -98,7 +98,7 @@ namespace TowerDefense.Managers
                 TowerPlatform platform = GetPlatformUnderCursor();
                 if (platform != null && platform.IsOccupied)
                 {
-                    _upgradeSellPanel.Show(platform.PlacedTower);
+                    _upgradeSellPopup.Show(platform.PlacedTower);
                 }
             }
         }

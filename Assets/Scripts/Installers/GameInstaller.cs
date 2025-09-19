@@ -57,7 +57,7 @@ namespace TowerDefense.Installers
             Container.Bind<UIManager>().AsSingle();
             
             // Bind UI panels that exist in the scene
-            Container.Bind<UpgradeSellPanel>().FromComponentInHierarchy().AsSingle();
+            Container.Bind<UpgradeSellPopup>().FromComponentInHierarchy().AsSingle();
             Container.Bind<GameOverScreen>().FromComponentInHierarchy().AsSingle();
             
             // Bind factories to their interfaces

@@ -15,4 +15,4 @@ MonoBehaviour:
   EnemyPrefab: {fileID: 8501888131368643638, guid: 19ed4c80ca268cc4bbe13a152abb95c8, type: 3}
   BaseHealth: 200
   BaseMoveSpeed: 2.5
-  CurrencyValue: 20
+  CurrencyValue: 12
